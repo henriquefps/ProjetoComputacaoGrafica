@@ -1,5 +1,7 @@
 package va1;
 
+import java.io.IOException;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -211,7 +213,7 @@ public class BibOps {
 		double xmax = inicio.x;
 		double xmin = inicio.x;
 		for (double scanlineY = inicio.y; scanlineY <= meio.y; scanlineY++) {
-			gc.setFill(Color.RED);
+			//gc.setFill(Color.RED);
 			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 2);
 			xmin += coefRetaMin;
 			xmax += coefRetaMax;
@@ -231,7 +233,7 @@ public class BibOps {
 		double xmax = fim.x;
 		double xmin = fim.x;
 		for (double scanlineY = fim.y; scanlineY >= meio.y; scanlineY--) {
-			gc.setFill(Color.BLUE);
+			//gc.setFill(Color.BLUE);
 			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 2);
 			xmin -= coefRetaMin;
 			xmax -= coefRetaMax;
@@ -249,5 +251,94 @@ public class BibOps {
 			System.err.println("Problema na ordem\ny1 = " + inicio.y + "\ny2 = " + meio.y + "\ny3 = " + fim.y);
 			return;
 		}
+	}
+	public static void malhaPontos(GraphicsContext gc, int xmax, int ymax) {
+		gc.setFill(Color.BLUEVIOLET); // Cor do fundo
+		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
+		double maxX = Testes.p[0].x, maxY = Testes.p[0].y;
+		double minX = Testes.p[0].x, minY = Testes.p[0].y;
+		for (int i = 1; i < Testes.p.length; i++) {
+			if (Testes.p[i].x > maxX) {
+				maxX = Testes.p[i].x;
+			}
+			if (Testes.p[i].y > maxY) {
+				maxY = Testes.p[i].y;
+			}
+
+			if (Testes.p[i].x < minX) {
+				minX = Testes.p[i].x;
+			}
+			if (Testes.p[i].y < minY) {
+				minY = Testes.p[i].y;
+			}
+		}
+		for (int i = 0; i < Testes.p.length; i++) {
+			double ponto[] = { Testes.p[i].x, Testes.p[i].y };
+			ponto[0] = ((ponto[0] - minX) / (maxX - minX)) * (xmax - 11) + 1;
+			ponto[1] = ((ponto[1] - minY) / (maxY - minY)) * (ymax - 11) + 1;
+			gc.setFill(Color.GOLD); // Cor do Ponto
+			gc.fillRect(ponto[0], ponto[1], 3, 3); // Tamanho do Ponto
+		}
+	}
+
+	public static void malhaTriangulos(GraphicsContext gc, int xmax, int ymax) {
+		gc.setFill(Color.BLACK); // Cor do fundo
+		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
+		double maxX = Testes.t[0].a.x, maxY = Testes.t[0].a.y;
+		double minX = Testes.t[0].a.x, minY = Testes.t[0].a.y;
+		for (int i = 0; i < Testes.t.length; i++) {
+			maxX = Math.max(maxX, Testes.t[i].a.x);
+			maxX = Math.max(maxX, Testes.t[i].b.x);
+			maxX = Math.max(maxX, Testes.t[i].c.x);
+
+			maxY = Math.max(maxY, Testes.t[i].a.y);
+			maxY = Math.max(maxY, Testes.t[i].b.y);
+			maxY = Math.max(maxY, Testes.t[i].c.y);
+
+			minX = Math.min(minX, Testes.t[i].a.x);
+			minX = Math.min(minX, Testes.t[i].b.x);
+			minX = Math.min(minX, Testes.t[i].c.x);
+
+			minY = Math.min(minY, Testes.t[i].a.y);
+			minY = Math.min(minY, Testes.t[i].b.y);
+			minY = Math.min(minY, Testes.t[i].c.y);
+
+		}
+		for (int i = 0; i < Testes.t.length; i++) {
+			double pontoA[] = new double[2];
+			pontoA[0] = (Testes.camera.d * Testes.t[i].a.x/Testes.t[i].a.z)/Testes.camera.hx;
+			pontoA[1] = (Testes.camera.d * Testes.t[i].a.y/Testes.t[i].a.z)/Testes.camera.hy;
+			pontoA[0] = Math.abs((pontoA[0] + Testes.camera.hx)/(2 * Testes.camera.hx) * xmax + 0.5);
+			pontoA[1] = Math.abs(ymax - (pontoA[1] + Testes.camera.hy)/(2 * Testes.camera.hy) * ymax + 0.5);
+
+			double pontoB[] = new double[2];
+			pontoB[0] = (Testes.camera.d * Testes.t[i].b.x/Testes.t[i].b.z)/Testes.camera.hx;
+			pontoB[1] = (Testes.camera.d * Testes.t[i].b.y/Testes.t[i].b.z)/Testes.camera.hy;
+			pontoB[0] = Math.abs((pontoB[0] + Testes.camera.hx)/(2 * Testes.camera.hx) * xmax + 0.5);
+			pontoB[1] = Math.abs(ymax - (pontoB[1] + Testes.camera.hy)/(2 * Testes.camera.hy) * ymax + 0.5);
+
+			double pontoC[] = new double[2];
+			pontoC[0] = (Testes.camera.d * Testes.t[i].c.x/Testes.t[i].c.z)/Testes.camera.hx;
+			pontoC[1] = (Testes.camera.d * Testes.t[i].c.y/Testes.t[i].c.z)/Testes.camera.hy;
+			pontoC[0] = Math.abs((pontoC[0] + Testes.camera.hx)/(2 * Testes.camera.hx) * xmax + 0.5);
+			pontoC[1] = Math.abs(ymax - (pontoC[1] + Testes.camera.hy)/(2 * Testes.camera.hy) * ymax + 0.5);
+			
+			gc.setFill(Color.WHITE); // Cor do Ponto
+			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
+			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
+			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
+			
+			BibOps.scanLine(new Ponto2D(pontoA[0], pontoA[1]), new Ponto2D(pontoB[0], pontoB[1]), new Ponto2D(pontoC[0], pontoC[1]), gc);
+			
+		}
+		
+	}
+	public static void atualizarCoordVista(String arquivoSemExtensao) {
+		try {
+			Testes.getPontosArquivo(arquivoSemExtensao);
+			for (int i = 0; i < Testes.t.length; i++) {
+				BibOps.atualizaTrianguloParaCoordVista(Testes.t[i], Testes.camera);
+			}
+		} catch (IOException e) {e.printStackTrace();}
 	}
 }

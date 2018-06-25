@@ -39,5 +39,15 @@ public class CameraVirtual {
 		}
 		return r;
 	}
+	
+	public void atualizarParametrosDeCamera(double[][] V, double [][] N, double d, double hx, double hy, Ponto3D C) {
+		this.V = V;
+		this.N = N;
+		ortogonalizarV();
+		this.d = d;
+		this.hx = hx;
+		this.hy = hy;
+		this.C = C;
+	}
 
 }
