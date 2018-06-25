@@ -1,12 +1,12 @@
 package va1;
 
 public class CameraVirtual {
-	double U[][] = new double[3][1];
-	double V[][] = new double[3][1];
-	double N[][] = new double[3][1];
+	public double U[][] = new double[3][1];
+	public double V[][] = new double[3][1];
+	public double N[][] = new double[3][1];
 
-	double d, hx, hy;
-	Ponto3D C;
+	public double d, hx, hy;
+	public Ponto3D C;
 
 	public void ortogonalizarV() {
 		double aux = BibOps.produtoEscalar3D(V, N) / BibOps.produtoEscalar3D(N, N);

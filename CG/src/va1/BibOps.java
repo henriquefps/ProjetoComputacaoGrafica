@@ -211,7 +211,8 @@ public class BibOps {
 		double xmax = inicio.x;
 		double xmin = inicio.x;
 		for (double scanlineY = inicio.y; scanlineY <= meio.y; scanlineY++) {
-			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 1);
+			gc.setFill(Color.RED);
+			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 2);
 			xmin += coefRetaMin;
 			xmax += coefRetaMax;
 		}
@@ -230,7 +231,8 @@ public class BibOps {
 		double xmax = fim.x;
 		double xmin = fim.x;
 		for (double scanlineY = fim.y; scanlineY >= meio.y; scanlineY--) {
-			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 1);
+			gc.setFill(Color.BLUE);
+			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 2);
 			xmin -= coefRetaMin;
 			xmax -= coefRetaMax;
 		}

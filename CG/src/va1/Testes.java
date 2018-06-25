@@ -1,17 +1,19 @@
 package va1;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+import control.JanelaParteDois;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.awt.font.ImageGraphicAttribute;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class Testes extends Application {
 
@@ -150,16 +152,21 @@ public class Testes extends Application {
 		
 		//imprimeMatriz(camera.N, 3, 1);
 
-		for (int i = 0; i < t.length; i++) {
-			BibOps.atualizaTrianguloParaCoordVista(t[i], camera);
-		}
+		atualizarCoordVista();
 		launch(args);
 
 	}
 	
-	static CameraVirtual camera;
+	public static void atualizarCoordVista() {
+		for (int i = 0; i < t.length; i++) {
+			BibOps.atualizaTrianguloParaCoordVista(t[i], camera);
+		}
+	}
+	
+	public static CameraVirtual camera;
 	static Ponto3D p[];
 	static Triangulo t[];
+	public static int xmax = 500, ymax = 500;
 
 	public static void getPontosArquivo(String arquivoSemExtensao) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(arquivoSemExtensao + ".byu"));
@@ -187,7 +194,7 @@ public class Testes extends Application {
 		reader.close();
 	}
 
-	public void malhaPontos(GraphicsContext gc, int xmax, int ymax) {
+	public static void malhaPontos(GraphicsContext gc, int xmax, int ymax) {
 		gc.setFill(Color.BLUEVIOLET); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
 		double maxX = Testes.p[0].x, maxY = Testes.p[0].y;
@@ -216,7 +223,7 @@ public class Testes extends Application {
 		}
 	}
 
-	public void malhaTriangulos(GraphicsContext gc, int xmax, int ymax) {
+	public static void malhaTriangulos(GraphicsContext gc, int xmax, int ymax) {
 		gc.setFill(Color.BLACK); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
 		double maxX = t[0].a.x, maxY = t[0].a.y;
@@ -270,16 +277,9 @@ public class Testes extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		int xmax = 500;
-		int ymax = 500;
 		primaryStage.setTitle("Teste");
-		Canvas c = new Canvas(xmax, ymax);
-		GraphicsContext gc = c.getGraphicsContext2D();
-		
-		malhaTriangulos(gc, xmax, ymax);
-		
-		Group root = new Group(c);
-		primaryStage.setScene(new Scene(root));
+		BorderPane pane = FXMLLoader.load(this.getClass().getResource("janelaProjetoP2.fxml"));
+		primaryStage.setScene(new Scene(pane));
 		primaryStage.setResizable(false);
 		primaryStage.show();
 
