@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import va1.BibOps;
 import va1.Ponto3D;
 import va1.Testes;
@@ -35,6 +36,9 @@ public class JanelaParteDois implements Initializable {
 
 	@FXML
 	private TextField cValue;
+	
+	@FXML
+	private TextField labelArquivo;
 
 	@FXML
 	private AnchorPane janela;
@@ -49,9 +53,11 @@ public class JanelaParteDois implements Initializable {
 	private Label alerta;
 
 	@FXML
-	void mudarPerspectiva(ActionEvent event) throws IOException {
+	void mudarPerspectiva(){
 		Testes.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
 				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
+		
+		Testes.arquivo = labelArquivo.getText();
 
 		BibOps.atualizarCoordVista(Testes.arquivo);
 		desenho.getGraphicsContext2D().fillRect(0, 0, Testes.xmax, Testes.ymax);
@@ -66,6 +72,7 @@ public class JanelaParteDois implements Initializable {
 		this.hxValue.setText("1.5");
 		this.hyValue.setText("1.5");
 		this.cValue.setText("0 -500 500");
+		this.labelArquivo.setText(Testes.arquivo);
 		BibOps.atualizarCoordVista(Testes.arquivo);
 		BibOps.malhaTriangulos(desenho.getGraphicsContext2D(), Testes.xmax, Testes.ymax);
 	}
@@ -104,5 +111,4 @@ public class JanelaParteDois implements Initializable {
 		}
 		return dres;
 	}
-
 }
