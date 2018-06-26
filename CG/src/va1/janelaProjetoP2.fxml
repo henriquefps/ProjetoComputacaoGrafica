@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.JanelaParteDois">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.JanelaParteDois">
    <left>
       <AnchorPane prefHeight="500.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -53,6 +53,12 @@
                   </HBox>
                   <Label fx:id="alerta" textFill="RED" />
                   <Button fx:id="calcular" mnemonicParsing="false" onAction="#mudarPerspectiva" text="Calcular" />
+                  <AnchorPane prefHeight="80.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="labelArquivo" alignment="BOTTOM_CENTER" layoutX="64.0" layoutY="27.0" prefHeight="27.0" prefWidth="136.0" promptText="Sem Extensão" />
+                        <Label layoutX="6.0" layoutY="32.0" text="Arquivo:" textFill="RED" />
+                     </children>
+                  </AnchorPane>
                </children>
             </VBox>
          </children>
