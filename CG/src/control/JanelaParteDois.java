@@ -66,15 +66,16 @@ public class JanelaParteDois implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		this.nValue.setText("0 1 -1");
+		this.nValue.setText("0 1.4 -1");
 		this.vValue.setText("0 -1 -1");
-		this.dValue.setText("5");
+		this.dValue.setText("10");
 		this.hxValue.setText("1.5");
 		this.hyValue.setText("1.5");
 		this.cValue.setText("0 -500 500");
 		this.labelArquivo.setText(Testes.arquivo);
 		BibOps.atualizarCoordVista(Testes.arquivo);
 		BibOps.malhaTriangulos(desenho.getGraphicsContext2D(), Testes.xmax, Testes.ymax);
+		
 	}
 
 	private Ponto3D getC() {

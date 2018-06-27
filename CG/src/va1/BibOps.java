@@ -166,34 +166,38 @@ public class BibOps {
 				meio = c;
 				fim = a;
 			}
-		} else if(ymin == c.y){
+		} else if (ymin == c.y) {
 			inicio = c;
 			if (b.y <= a.y) {
 				meio = b;
 				fim = a;
-			} else { 
+			} else {
 				meio = a;
 				fim = b;
 			}
 		} else {
 			System.err.println("ymin não corresponde a nada");
 		}
-		
-		if ((int)meio.y == (int)fim.y /*|| (int)meio.y == ((int)fim.y + 1) || (int)meio.y == ((int)fim.y - 1)*/) {
-			//System.out.println("Base Chata");
-			//analisarOrdem(inicio, meio, fim);
-			//gc.setFill(Color.RED);
+
+		if ((int) meio.y == (int) fim.y /* || (int)meio.y == ((int)fim.y + 1) || (int)meio.y == ((int)fim.y - 1) */) {
+			// System.out.println("Base Chata");
+			// analisarOrdem(inicio, meio, fim);
+			// gc.setFill(Color.RED);
 			preencherTrianguloSuperior(gc, inicio, meio, fim);
-		} else if ((int)inicio.y == (int)meio.y/* || (int)inicio.y == ((int)meio.y + 1) || (int)inicio.y == ((int)meio.y - 1)*/) {
-			//System.out.println("Topo Chato");
-			//analisarOrdem(inicio, meio, fim);
-			//gc.setFill(Color.GREEN);
+		} else if ((int) inicio.y == (int) meio.y/*
+													 * || (int)inicio.y == ((int)meio.y + 1) || (int)inicio.y ==
+													 * ((int)meio.y - 1)
+													 */) {
+			// System.out.println("Topo Chato");
+			// analisarOrdem(inicio, meio, fim);
+			// gc.setFill(Color.GREEN);
 			preencherTrianguloInferior(gc, inicio, meio, fim);
 		} else {
-			//System.out.println("Normal");
-			//analisarOrdem(inicio, meio, fim);
-			//gc.setFill(Color.BLUE);
-			//Ponto2D v4 = new Ponto2D((double)(inicio.x + ((double)(meio.y - inicio.y) / (double)(fim.y - inicio.y)) * (fim.x - inicio.x)), meio.y);
+			// System.out.println("Normal");
+			// analisarOrdem(inicio, meio, fim);
+			// gc.setFill(Color.BLUE);
+			// Ponto2D v4 = new Ponto2D((double)(inicio.x + ((double)(meio.y - inicio.y) /
+			// (double)(fim.y - inicio.y)) * (fim.x - inicio.x)), meio.y);
 			preencherTrianguloSuperior(gc, inicio, meio, fim);
 			preencherTrianguloInferior(gc, inicio, meio, fim);
 		}
@@ -201,20 +205,39 @@ public class BibOps {
 	}
 
 	public static void preencherTrianguloSuperior(GraphicsContext gc, Ponto2D inicio, Ponto2D meio, Ponto2D fim) {
+		if (Testes.atual == 945) {
+			System.out.println("Inicio = (" + inicio.x + ", " + inicio.y + ")");
+			System.out.println("Meio = (" + meio.x + ", " + meio.y + ")");
+			System.out.println("Fim = (" + fim.x + ", " + fim.y + ")");
+		}
 		double coefRetaMin, coefRetaMax;
 		if (meio.x < fim.x) {
 			coefRetaMin = (meio.x - inicio.x) / (meio.y - inicio.y);
 			coefRetaMax = (fim.x - inicio.x) / (fim.y - inicio.y);
 		} else {
+			
 			coefRetaMin = (fim.x - inicio.x) / (fim.y - inicio.y);
 			coefRetaMax = (meio.x - inicio.x) / (meio.y - inicio.y);
 		}
 		
-		double xmax = inicio.x;
-		double xmin = inicio.x;
-		for (double scanlineY = inicio.y; scanlineY <= meio.y; scanlineY++) {
-			//gc.setFill(Color.RED);
-			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 1);
+		
+		double xmax = (int)inicio.x;
+		double xmin = (int)inicio.x;
+
+		if (Testes.atual == 945) {
+			System.out.println("cmin " + coefRetaMin);
+			System.out.println("cmax " + coefRetaMax + "\n");
+			System.out.println("xmin " + xmin);
+			System.out.println("xmax " + xmax + "\n");
+		}
+		int scanlineY;
+		for (scanlineY = (int) inicio.y; scanlineY <= (int) meio.y; scanlineY++) {
+			double aux = Math.max(inicio.x, meio.x);
+			aux = Math.max(aux, fim.x);
+			for (int x = (int) xmin; x <= (int) xmax && x < aux; x++) {
+				//gc.setFill(Color.RED);
+				gc.fillRect(x, scanlineY, 1, 1);
+			}
 			xmin += coefRetaMin;
 			xmax += coefRetaMax;
 		}
@@ -229,22 +252,21 @@ public class BibOps {
 			coefRetaMin = (inicio.x - fim.x) / (inicio.y - fim.y);
 			coefRetaMax = (meio.x - fim.x) / (meio.y - fim.y);
 		}
-		
+
 		double xmax = fim.x;
 		double xmin = fim.x;
-		for (double scanlineY = fim.y; scanlineY >= meio.y; scanlineY--) {
-			//gc.setFill(Color.BLUE);
-			gc.fillRect(xmin-1, scanlineY, Math.max(xmax+1, xmin-1) - Math.min(xmax+1, xmin-1), 1);
+		for (int scanlineY = (int) fim.y; scanlineY >= meio.y; scanlineY--) {
+			 //gc.setFill(Color.BLUE);
+			
+			for (int x = (int) xmin; x <= (int) xmax; x++) {
+				gc.fillRect(x, scanlineY, 1, 1);
+			}
 			xmin -= coefRetaMin;
 			xmax -= coefRetaMax;
 		}
-		xmin -= coefRetaMin;
-		xmax -= coefRetaMax;
-		
-		
 	}
-	
-	private static void analisarOrdem(Ponto2D inicio, Ponto2D meio, Ponto2D fim){
+
+	private static void analisarOrdem(Ponto2D inicio, Ponto2D meio, Ponto2D fim) {
 		if (inicio.y <= meio.y && meio.y <= fim.y) {
 			System.out.println("ordem ok\ny1 = " + inicio.y + "\ny2 = " + meio.y + "\ny3 = " + fim.y);
 		} else {
@@ -252,6 +274,7 @@ public class BibOps {
 			return;
 		}
 	}
+
 	public static void malhaPontos(GraphicsContext gc, int xmax, int ymax) {
 		gc.setFill(Color.BLUEVIOLET); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
@@ -306,39 +329,44 @@ public class BibOps {
 		}
 		for (int i = 0; i < Testes.t.length; i++) {
 			double pontoA[] = new double[2];
-			pontoA[0] = (Testes.camera.d * Testes.t[i].a.x/Testes.t[i].a.z)/Testes.camera.hx;
-			pontoA[1] = (Testes.camera.d * Testes.t[i].a.y/Testes.t[i].a.z)/Testes.camera.hy;
-			pontoA[0] = Math.abs((pontoA[0] + Testes.camera.hx)/(2 * Testes.camera.hx) * xmax + 0.5);
-			pontoA[1] = Math.abs(ymax - (pontoA[1] + Testes.camera.hy)/(2 * Testes.camera.hy) * ymax + 0.5);
+			pontoA[0] = (Testes.camera.d * Testes.t[i].a.x / Testes.t[i].a.z) / Testes.camera.hx;
+			pontoA[1] = (Testes.camera.d * Testes.t[i].a.y / Testes.t[i].a.z) / Testes.camera.hy;
+			pontoA[0] = Math.abs((pontoA[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
+			pontoA[1] = Math.abs(ymax - (pontoA[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
 
 			double pontoB[] = new double[2];
-			pontoB[0] = (Testes.camera.d * Testes.t[i].b.x/Testes.t[i].b.z)/Testes.camera.hx;
-			pontoB[1] = (Testes.camera.d * Testes.t[i].b.y/Testes.t[i].b.z)/Testes.camera.hy;
-			pontoB[0] = Math.abs((pontoB[0] + Testes.camera.hx)/(2 * Testes.camera.hx) * xmax + 0.5);
-			pontoB[1] = Math.abs(ymax - (pontoB[1] + Testes.camera.hy)/(2 * Testes.camera.hy) * ymax + 0.5);
+			pontoB[0] = (Testes.camera.d * Testes.t[i].b.x / Testes.t[i].b.z) / Testes.camera.hx;
+			pontoB[1] = (Testes.camera.d * Testes.t[i].b.y / Testes.t[i].b.z) / Testes.camera.hy;
+			pontoB[0] = Math.abs((pontoB[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
+			pontoB[1] = Math.abs(ymax - (pontoB[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
 
 			double pontoC[] = new double[2];
-			pontoC[0] = (Testes.camera.d * Testes.t[i].c.x/Testes.t[i].c.z)/Testes.camera.hx;
-			pontoC[1] = (Testes.camera.d * Testes.t[i].c.y/Testes.t[i].c.z)/Testes.camera.hy;
-			pontoC[0] = Math.abs((pontoC[0] + Testes.camera.hx)/(2 * Testes.camera.hx) * xmax + 0.5);
-			pontoC[1] = Math.abs(ymax - (pontoC[1] + Testes.camera.hy)/(2 * Testes.camera.hy) * ymax + 0.5);
-			
+			pontoC[0] = (Testes.camera.d * Testes.t[i].c.x / Testes.t[i].c.z) / Testes.camera.hx;
+			pontoC[1] = (Testes.camera.d * Testes.t[i].c.y / Testes.t[i].c.z) / Testes.camera.hy;
+			pontoC[0] = Math.abs((pontoC[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
+			pontoC[1] = Math.abs(ymax - (pontoC[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
+
 			gc.setFill(Color.WHITE); // Cor do Ponto
 			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
 			
-			BibOps.scanLine(new Ponto2D(pontoA[0], pontoA[1]), new Ponto2D(pontoB[0], pontoB[1]), new Ponto2D(pontoC[0], pontoC[1]), gc);
-			
+
+			BibOps.scanLine(new Ponto2D(pontoA[0], pontoA[1]), new Ponto2D(pontoB[0], pontoB[1]),
+					new Ponto2D(pontoC[0], pontoC[1]), gc);
+			Testes.atual++;
 		}
-		
+
 	}
+
 	public static void atualizarCoordVista(String arquivoSemExtensao) {
 		try {
 			Testes.getPontosArquivo(arquivoSemExtensao);
 			for (int i = 0; i < Testes.t.length; i++) {
 				BibOps.atualizaTrianguloParaCoordVista(Testes.t[i], Testes.camera);
 			}
-		} catch (IOException e) {e.printStackTrace();}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

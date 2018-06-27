@@ -136,13 +136,14 @@ public class Testes extends Application {
 		
 		
 		camera = new CameraVirtual();
-		camera.N = new double[][] { { 0 }, { 1 }, { -1 } };
+		camera.N = new double[][] { { 0 }, { 1.4 }, { -1 } };
 		camera.V = new double[][] { { 0 }, { -1 }, { -1 } };
-		camera.d = 5;
+		camera.d = 10;
 		camera.hx = 1.5;
 		camera.hy = 1.5;
 		camera.C = new Ponto3D(0, -500, 500);
 		camera.ortogonalizarV();
+		
 
 		launch(args);
 
@@ -155,6 +156,7 @@ public class Testes extends Application {
 	public static Triangulo t[];
 	public static int xmax = 500, ymax = 500;
 	public static String arquivo = "calice2";
+	public static int atual = 0;
 
 	public static void getPontosArquivo(String arquivoSemExtensao) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(arquivoSemExtensao + ".byu"));
