@@ -110,9 +110,9 @@ public class Testes extends Application {
 
 		System.out.println("1G - Coordenada Baricentrica");
 
-		Ponto2D ponto = BibOps.coordBaricentricas2D(new Ponto2D(-0.25, 0.75), new Ponto2D(-1, 1), new Ponto2D(0, -1),
+		Ponto3D ponto = BibOps.coordBaricentricas2D(new Ponto2D(-0.25, 0.75), new Ponto2D(-1, 1), new Ponto2D(0, -1),
 				new Ponto2D(1, 1));
-		System.out.println("P = (" + ponto.x + ", " + ponto.y + ")");
+		System.out.println("P = (" + ponto.x + ", " + ponto.y + ", " + ponto.y + ")");
 		System.out.println("---------------------");
 
 		System.out.println();
@@ -165,6 +165,8 @@ public class Testes extends Application {
 	public static Iluminacao iluminacao;
 	public static Ponto3D p[];
 	public static Triangulo t[];
+	public static Triangulo triangulosOrdenadosPara_zBuffer[];
+	public static double[][] matrix_zBuffer;
 	public static int xmax = 500, ymax = 500;
 	public static String arquivo = "calice2";
 	public static int atual = 0;

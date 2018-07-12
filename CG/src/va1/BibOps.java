@@ -7,6 +7,38 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class BibOps {
+	
+	public static void executarTarefaInicial(GraphicsContext desenho) {
+		BibOps.iniciarMatriz_zBuffer();
+		BibOps.atualizarCoordVista(Testes.arquivo);
+		BibOps.normaisDosTriangulos(Testes.t);
+		BibOps.normaisDosVertices(Testes.p, Testes.t);
+		BibOps.setBaricentroTriangulos(Testes.t);
+		Testes.triangulosOrdenadosPara_zBuffer = BibOps.ordenarTriangulos_zBuffer(Testes.t);
+//		BibOps.malhaPontos(desenho.getGraphicsContext2D(), Testes.xmax, Testes.ymax);
+		BibOps.malhaTriangulos(desenho, Testes.xmax, Testes.ymax);
+	}
+	
+	public static void executarTarefaBotao(GraphicsContext desenho) {
+		BibOps.atualizarCoordVista(Testes.arquivo);
+		desenho.fillRect(0, 0, Testes.xmax, Testes.ymax);
+		BibOps.malhaTriangulos(desenho, Testes.xmax, Testes.ymax);
+	}
+	
+	public static void iniciarMatriz_zBuffer() {
+		Testes.matrix_zBuffer = new double[Testes.xmax][Testes.ymax];
+		for (int i = 0; i < Testes.matrix_zBuffer.length; i++) {
+			for (int j = 0; j < Testes.matrix_zBuffer.length; j++) {
+				Testes.matrix_zBuffer[i][j] = Double.MIN_VALUE;
+			}
+		}
+	}
+	
+	public static void atualizar_zBuffer(int i, int j, double profundidadeAtual) {
+		if (Testes.matrix_zBuffer[i][j] < profundidadeAtual) {
+			Testes.matrix_zBuffer[i][j] = profundidadeAtual;
+		}
+	}
 
 	public static double[][] matrixMulti(double[] A[], double[] B[], int x1, int y1, int x2, int y2) {
 		double[] C[] = new double[x1][y2];
@@ -82,7 +114,7 @@ public class BibOps {
 		return vet;
 	}
 
-	public static Ponto2D coordBaricentricas2D(Ponto2D alvo, Ponto2D a, Ponto2D b, Ponto2D c) {
+	public static Ponto3D coordBaricentricas2D(Ponto2D alvo, Ponto2D a, Ponto2D b, Ponto2D c) {
 		double[] matrizT[] = new double[2][2];
 		double[] resposta[];
 
@@ -100,8 +132,7 @@ public class BibOps {
 		double M_Inversa[][] = inversa(matrizT, det);
 		resposta = matrixMulti(M_Inversa, vet, 2, 2, 2, 1);
 
-		Ponto2D p = new Ponto2D(resposta[0][0], resposta[1][0]);
-		return p;
+		return new Ponto3D(resposta[0][0], resposta[1][0], 1 - resposta[0][0] - resposta[1][0]);
 	}
 
 	public static Ponto2D cartesianaDaBaricentrica(Ponto2D p1, Ponto2D p2, Ponto2D p3, double alfa, double beta,
@@ -259,6 +290,9 @@ public class BibOps {
 			// gc.setFill(Color.BLUE);
 
 			for (int x = (int) xmin; x <= (int) xmax; x++) {
+				Ponto3D p = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
+				atualizar_zBuffer(x, scanlineY, p.z);
+				//p.normal = normalDoTriangulo();
 				gc.fillRect(x, scanlineY, 1, 1);
 			}
 			xmin -= coefRetaMin;
@@ -306,6 +340,8 @@ public class BibOps {
 	}
 
 	public static void malhaTriangulos(GraphicsContext gc, int xmax, int ymax) {
+		ArrayList<double[][]> listaDePontos = new ArrayList<double[][]>();
+
 		gc.setFill(Color.BLACK); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
 		double maxX = Testes.t[0].a.x, maxY = Testes.t[0].a.y;
@@ -332,31 +368,41 @@ public class BibOps {
 			double pontoA[] = new double[2];
 			pontoA[0] = (Testes.camera.d * Testes.t[i].a.x / Testes.t[i].a.z) / Testes.camera.hx;
 			pontoA[1] = (Testes.camera.d * Testes.t[i].a.y / Testes.t[i].a.z) / Testes.camera.hy;
-			pontoA[0] = Math.abs((pontoA[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
-			pontoA[1] = Math.abs(ymax - (pontoA[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
+			pontoA[0] = Math.floor((pontoA[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
+			pontoA[1] = Math.floor(ymax - (pontoA[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
 
 			double pontoB[] = new double[2];
 			pontoB[0] = (Testes.camera.d * Testes.t[i].b.x / Testes.t[i].b.z) / Testes.camera.hx;
 			pontoB[1] = (Testes.camera.d * Testes.t[i].b.y / Testes.t[i].b.z) / Testes.camera.hy;
-			pontoB[0] = Math.abs((pontoB[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
-			pontoB[1] = Math.abs(ymax - (pontoB[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
+			pontoB[0] = Math.floor((pontoB[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
+			pontoB[1] = Math.floor(ymax - (pontoB[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
 
 			double pontoC[] = new double[2];
 			pontoC[0] = (Testes.camera.d * Testes.t[i].c.x / Testes.t[i].c.z) / Testes.camera.hx;
 			pontoC[1] = (Testes.camera.d * Testes.t[i].c.y / Testes.t[i].c.z) / Testes.camera.hy;
-			pontoC[0] = Math.abs((pontoC[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
-			pontoC[1] = Math.abs(ymax - (pontoC[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
+			pontoC[0] = Math.floor((pontoC[0] + Testes.camera.hx) / (2 * Testes.camera.hx) * xmax + 0.5);
+			pontoC[1] = Math.floor(ymax - (pontoC[1] + Testes.camera.hy) / (2 * Testes.camera.hy) * ymax + 0.5);
+
+			listaDePontos.add(new double[][] { pontoA, pontoB, pontoC });
 
 			gc.setFill(Color.WHITE); // Cor do Ponto
 			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
 
-			BibOps.scanLine(new Ponto2D(pontoA[0], pontoA[1]), new Ponto2D(pontoB[0], pontoB[1]),
-					new Ponto2D(pontoC[0], pontoC[1]), gc);
+		}
+		
+		scanLineEmListaDePontos(listaDePontos, gc);
+
+	}
+	
+	private static void scanLineEmListaDePontos(ArrayList<double[][]> listaDePontos, GraphicsContext gc) {
+		for (int i = 0; i < listaDePontos.size(); i++) {
+			BibOps.scanLine(new Ponto2D(listaDePontos.get(i)[0][0], listaDePontos.get(i)[0][1]),
+					new Ponto2D(listaDePontos.get(i)[1][0], listaDePontos.get(i)[1][1]),
+					new Ponto2D(listaDePontos.get(i)[2][0], listaDePontos.get(i)[2][1]), gc);
 			Testes.atual++;
 		}
-
 	}
 
 	public static void atualizarCoordVista(String arquivoSemExtensao) {
@@ -451,7 +497,6 @@ public class BibOps {
 		}
 	}
 
-
 	private static void buildMaxHeap(Triangulo[] t) {
 		for (int i = t.length / 2 - 1; i >= 0; i--) {
 			heapify(t, i, t.length - 1);
@@ -459,13 +504,15 @@ public class BibOps {
 
 	}
 
-	public static void ordenarTriangulos(Triangulo[] t) {
-		buildMaxHeap(t);
-		for (int i = t.length - 1; i >= 1; i--) {
-			double aux = t[0].baricentro.y;
-			t[0].baricentro.y = t[i].baricentro.y;
-			t[i].baricentro.y = aux;
-			heapify(t, 0, i - 1);
+	public static Triangulo[] ordenarTriangulos_zBuffer(Triangulo[] t) {
+		Triangulo[] zBuffer = t.clone();
+		buildMaxHeap(zBuffer);
+		for (int i = zBuffer.length - 1; i >= 1; i--) {
+			double aux = zBuffer[0].baricentro.y;
+			zBuffer[0].baricentro.y = zBuffer[i].baricentro.y;
+			zBuffer[i].baricentro.y = aux;
+			heapify(zBuffer, 0, i - 1);
 		}
+		return zBuffer;
 	}
 }

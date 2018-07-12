@@ -55,10 +55,9 @@ public class JanelaParteDois implements Initializable {
 				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
 		
 		Testes.arquivo = labelArquivo.getText();
+		
+		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
 
-		BibOps.atualizarCoordVista(Testes.arquivo);
-		desenho.getGraphicsContext2D().fillRect(0, 0, Testes.xmax, Testes.ymax);
-		BibOps.malhaTriangulos(desenho.getGraphicsContext2D(), Testes.xmax, Testes.ymax);
 	}
 
 	@Override
@@ -71,12 +70,7 @@ public class JanelaParteDois implements Initializable {
 		this.cValue.setText("0 -500 500");
 		this.labelArquivo.setText(Testes.arquivo);
 		
-		BibOps.atualizarCoordVista(Testes.arquivo);
-		BibOps.normaisDosTriangulos(Testes.t);
-		BibOps.normaisDosVertices(Testes.p, Testes.t);
-		BibOps.setBaricentroTriangulos(Testes.t);
-		BibOps.ordenarTriangulos(Testes.t);
-		BibOps.malhaTriangulos(desenho.getGraphicsContext2D(), Testes.xmax, Testes.ymax);
+		BibOps.executarTarefaInicial(desenho.getGraphicsContext2D());
 		
 	}
 
