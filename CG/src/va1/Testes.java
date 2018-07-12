@@ -153,8 +153,11 @@ public class Testes extends Application {
 		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.5);
 		iluminacao.Ks = 0.5;
 		iluminacao.Eta = 1;
-		
+//getPontosArquivo("calice2");
+//		p[0].normal = new double[][]{{ 42}, {30}, {10}};
+//		imprimeMatriz(t[0].a.normal, 3, 1);
 
+		System.out.println("comecou");
 		launch(args);
 
 	}
@@ -171,30 +174,34 @@ public class Testes extends Application {
 	public static String arquivo = "calice2";
 	public static int atual = 0;
 
-	public static void getPontosArquivo(String arquivoSemExtensao) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(arquivoSemExtensao + ".byu"));
-		String linha = reader.readLine();
-		String qnt[] = linha.split(" ");
-		p = new Ponto3D[Integer.parseInt(qnt[0])];
-		t = new Triangulo[Integer.parseInt(qnt[1])];
-		for (int i = 0; i < p.length; i++) {
-			linha = reader.readLine();
-			qnt = linha.split(" ");
-			p[i] = new Ponto3D();
-			p[i].x = Double.parseDouble(qnt[0]);
-			p[i].y = Double.parseDouble(qnt[1]);
-			p[i].z = Double.parseDouble(qnt[2]);
+	public static void getPontosArquivo(String arquivoSemExtensao) {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(arquivoSemExtensao + ".byu"));
+			String linha = reader.readLine();
+			String qnt[] = linha.split(" ");
+			p = new Ponto3D[Integer.parseInt(qnt[0])];
+			t = new Triangulo[Integer.parseInt(qnt[1])];
+			for (int i = 0; i < p.length; i++) {
+				linha = reader.readLine();
+				qnt = linha.split(" ");
+				p[i] = new Ponto3D();
+				p[i].x = Double.parseDouble(qnt[0]);
+				p[i].y = Double.parseDouble(qnt[1]);
+				p[i].z = Double.parseDouble(qnt[2]);
+			}
+			for (int i = 0; i < t.length; i++) {
+				linha = reader.readLine();
+				qnt = linha.split(" ");
+				int a, b, c;
+				a = Integer.parseInt(qnt[0]);
+				b = Integer.parseInt(qnt[1]);
+				c = Integer.parseInt(qnt[2]);
+				t[i] = new Triangulo(p[a - 1], p[b - 1], p[c - 1]);
+			}
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		for (int i = 0; i < t.length; i++) {
-			linha = reader.readLine();
-			qnt = linha.split(" ");
-			int a, b, c;
-			a = Integer.parseInt(qnt[0]);
-			b = Integer.parseInt(qnt[1]);
-			c = Integer.parseInt(qnt[2]);
-			t[i] = new Triangulo(p[a - 1], p[b - 1], p[c - 1]);
-		}
-		reader.close();
 	}
 
 	

@@ -10,7 +10,6 @@ public class CameraVirtual {
 
 	public void ortogonalizarV() {
 		double aux = BibOps.produtoEscalar3D(V, N) / BibOps.produtoEscalar3D(N, N);
-
 		double vaux[][] = new double[3][1];
 		vaux[0][0] = aux * N[0][0];
 		vaux[1][0] = aux * N[1][0];
