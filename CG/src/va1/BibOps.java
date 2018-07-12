@@ -1,6 +1,7 @@
 package va1;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -215,14 +216,13 @@ public class BibOps {
 			coefRetaMin = (meio.x - inicio.x) / (meio.y - inicio.y);
 			coefRetaMax = (fim.x - inicio.x) / (fim.y - inicio.y);
 		} else {
-			
+
 			coefRetaMin = (fim.x - inicio.x) / (fim.y - inicio.y);
 			coefRetaMax = (meio.x - inicio.x) / (meio.y - inicio.y);
 		}
-		
-		
-		double xmax = (int)inicio.x;
-		double xmin = (int)inicio.x;
+
+		double xmax = (int) inicio.x;
+		double xmin = (int) inicio.x;
 
 		if (Testes.atual == 945) {
 			System.out.println("cmin " + coefRetaMin);
@@ -235,7 +235,7 @@ public class BibOps {
 			double aux = Math.max(inicio.x, meio.x);
 			aux = Math.max(aux, fim.x);
 			for (int x = (int) xmin; x <= (int) xmax && x < aux; x++) {
-				//gc.setFill(Color.RED);
+				// gc.setFill(Color.RED);
 				gc.fillRect(x, scanlineY, 1, 1);
 			}
 			xmin += coefRetaMin;
@@ -256,8 +256,8 @@ public class BibOps {
 		double xmax = fim.x;
 		double xmin = fim.x;
 		for (int scanlineY = (int) fim.y; scanlineY >= meio.y; scanlineY--) {
-			 //gc.setFill(Color.BLUE);
-			
+			// gc.setFill(Color.BLUE);
+
 			for (int x = (int) xmin; x <= (int) xmax; x++) {
 				gc.fillRect(x, scanlineY, 1, 1);
 			}
@@ -266,6 +266,7 @@ public class BibOps {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void analisarOrdem(Ponto2D inicio, Ponto2D meio, Ponto2D fim) {
 		if (inicio.y <= meio.y && meio.y <= fim.y) {
 			System.out.println("ordem ok\ny1 = " + inicio.y + "\ny2 = " + meio.y + "\ny3 = " + fim.y);
@@ -350,7 +351,6 @@ public class BibOps {
 			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
-			
 
 			BibOps.scanLine(new Ponto2D(pontoA[0], pontoA[1]), new Ponto2D(pontoB[0], pontoB[1]),
 					new Ponto2D(pontoC[0], pontoC[1]), gc);
@@ -367,6 +367,105 @@ public class BibOps {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static double[][] normalDoTriangulo(Triangulo a) {
+		return produtoVetorial3D(subtPontos3D(a.b, a.a), subtPontos3D(a.c, a.a));
+	}
+
+	public static ArrayList<double[][]> normaisDosTriangulos(Triangulo[] t) {
+		ArrayList<double[][]> listaDeNormais = new ArrayList<double[][]>();
+		for (int i = 0; i < t.length; i++) {
+			listaDeNormais.add(normalizaVetor3D(normalDoTriangulo(t[i])));
+			t[i].normal = listaDeNormais.get(i);
+		}
+		return listaDeNormais;
+	}
+
+	public static double[][] somarVetores3D(double A[][], double B[][]) {
+		double[][] C = new double[3][1];
+		C[0][0] = A[0][0] + B[0][0];
+		C[1][0] = A[1][0] + B[1][0];
+		C[2][0] = A[2][0] + B[2][0];
+		return C;
+	}
+
+	private static ArrayList<Triangulo> triangulosDeUmPonto(Ponto3D ponto, Triangulo t[]) {
+		ArrayList<Triangulo> lista = new ArrayList<Triangulo>();
+		for (int i = 0; i < t.length; i++) {
+			if (t[i].a == ponto || t[i].b == ponto || t[i].c == ponto) {
+				lista.add(t[i]);
+			}
+		}
+		return lista;
+	}
+
+	private static double[][] normalDeUmVertice(Ponto3D vertice, Triangulo t[]) {
+		double[][] normal = new double[3][1];
+		normal[0][0] = 0;
+		normal[1][0] = 0;
+		normal[2][0] = 0;
+		ArrayList<Triangulo> listaDeTriangulos = triangulosDeUmPonto(vertice, t);
+		for (int i = 0; i < listaDeTriangulos.size(); i++) {
+			normal = somarVetores3D(normal, listaDeTriangulos.get(i).normal);
+		}
+		return normal;
+	}
+
+	public static ArrayList<double[][]> normaisDosVertices(Ponto3D pontos[], Triangulo t[]) {
+		ArrayList<double[][]> listaDeNormais = new ArrayList<double[][]>();
+		for (int i = 0; i < pontos.length; i++) {
+			listaDeNormais.add(normalizaVetor3D(normalDeUmVertice(pontos[i], t)));
+			pontos[i].normal = listaDeNormais.get(i);
+		}
+		return listaDeNormais;
+	}
+
+	public static void setBaricentroTriangulos(Triangulo t[]) {
+		for (int i = 0; i < t.length; i++) {
+			t[i].setBaricentro();
+		}
+	}
+
+	private static void heapify(Triangulo[] t, int i, int n) {
+		while (2 * (i + 1) - 1 <= n) {// tem filhos
+			int maior = 0;
+			if ((2 * (i + 1) - 1) < n) { // tem dois filhos
+				if (t[2 * i + 1].baricentro.y < t[2 * i + 2].baricentro.y) {
+					maior = 2 * i + 2;
+				} else {
+					maior = 2 * i + 1;
+				}
+			} else {
+				maior = 2 * i + 1;
+			}
+			if (t[i].baricentro.y <= t[maior].baricentro.y) {
+				double aux = t[i].baricentro.y;
+				t[i].baricentro.y = t[maior].baricentro.y;
+				t[maior].baricentro.y = aux;
+				i = maior;
+			} else {
+				i = n;
+			}
+		}
+	}
+
+
+	private static void buildMaxHeap(Triangulo[] t) {
+		for (int i = t.length / 2 - 1; i >= 0; i--) {
+			heapify(t, i, t.length - 1);
+		}
+
+	}
+
+	public static void ordenarTriangulos(Triangulo[] t) {
+		buildMaxHeap(t);
+		for (int i = t.length - 1; i >= 1; i--) {
+			double aux = t[0].baricentro.y;
+			t[0].baricentro.y = t[i].baricentro.y;
+			t[i].baricentro.y = aux;
+			heapify(t, 0, i - 1);
 		}
 	}
 }

@@ -144,6 +144,16 @@ public class Testes extends Application {
 		camera.C = new Ponto3D(0, -500, 500);
 		camera.ortogonalizarV();
 		
+		iluminacao = new Iluminacao();
+		iluminacao.Ka = 0.2;
+		iluminacao.Iamb = new Ponto3D(100, 100, 100);
+		iluminacao.Il = new Ponto3D(127, 213, 254);
+		iluminacao.Pl = new Ponto3D(60, 5, -10);
+		iluminacao.Kd = new Ponto3D(0.5, 0.3, 0.2);
+		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.5);
+		iluminacao.Ks = 0.5;
+		iluminacao.Eta = 1;
+		
 
 		launch(args);
 
@@ -152,6 +162,7 @@ public class Testes extends Application {
 	
 	
 	public static CameraVirtual camera;
+	public static Iluminacao iluminacao;
 	public static Ponto3D p[];
 	public static Triangulo t[];
 	public static int xmax = 500, ymax = 500;

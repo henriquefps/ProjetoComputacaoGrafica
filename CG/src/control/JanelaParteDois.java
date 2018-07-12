@@ -1,10 +1,8 @@
 package control;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -12,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import va1.BibOps;
 import va1.Ponto3D;
 import va1.Testes;
@@ -73,7 +70,12 @@ public class JanelaParteDois implements Initializable {
 		this.hyValue.setText("1.5");
 		this.cValue.setText("0 -500 500");
 		this.labelArquivo.setText(Testes.arquivo);
+		
 		BibOps.atualizarCoordVista(Testes.arquivo);
+		BibOps.normaisDosTriangulos(Testes.t);
+		BibOps.normaisDosVertices(Testes.p, Testes.t);
+		BibOps.setBaricentroTriangulos(Testes.t);
+		BibOps.ordenarTriangulos(Testes.t);
 		BibOps.malhaTriangulos(desenho.getGraphicsContext2D(), Testes.xmax, Testes.ymax);
 		
 	}
