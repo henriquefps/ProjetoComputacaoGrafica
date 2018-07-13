@@ -64,7 +64,7 @@ public class JanelaParteDois implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.nValue.setText("0 1.4 -1");
 		this.vValue.setText("0 -1 -1");
-		this.dValue.setText("10");
+		this.dValue.setText("5");
 		this.hxValue.setText("1.5");
 		this.hyValue.setText("1.5");
 		this.cValue.setText("0 -500 500");
