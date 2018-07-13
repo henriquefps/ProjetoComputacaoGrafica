@@ -348,12 +348,12 @@ public class BibOps {
 			xmax -= coefRetaMax;
 		}
 	}
-	
+
 	private static void calcularCor(int x, int scanlineY, Ponto2D inicio, Ponto2D meio, Ponto2D fim, Triangulo t) {
 		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
 		Triangulo ord = trianguloOrdenado(t);
 		Ponto3D auxa = somarPontos(produtoPonto3DPorEscalar(ord.a, q.x), produtoPonto3DPorEscalar(ord.b, q.y));
-		//Ponto3D p = somarPontos(auxa, produtoPonto3DPorEscalar(ord.c, q.z));
+		// Ponto3D p = somarPontos(auxa, produtoPonto3DPorEscalar(ord.c, q.z));
 		Ponto3D p = cartesianaDaBaricentrica(ord.a, ord.b, ord.c, q.x, q.y, q.z);
 		double[][] n1 = produtoPorEscalar(t.original1.normal, p.x);
 		double[][] n2 = produtoPorEscalar(t.original2.normal, p.y);
@@ -375,8 +375,8 @@ public class BibOps {
 			Is = new Ponto3D(0, 0, 0);
 			Id = new Ponto3D(0, 0, 0);
 		} else {
-			Id = produtoComponentePonto3D(Testes.iluminacao.Il, produtoPonto3DPorEscalar(Testes.iluminacao.Od,
-					produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
+			Id = produtoComponentePonto3D(Testes.iluminacao.Il,
+					produtoPonto3DPorEscalar(Testes.iluminacao.Od, produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
 		}
 		Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
 
