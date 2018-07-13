@@ -1,8 +1,6 @@
 package va1;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -43,7 +41,8 @@ public class BibOps {
 			}
 		}
 	}
- 	public static void iniciarMatriz_zBuffer() {
+
+	public static void iniciarMatriz_zBuffer() {
 		Testes.matrix_zBuffer = new Objetto_zBuffer[Testes.xmax][Testes.ymax];
 		for (int i = 0; i < Testes.matrix_zBuffer.length; i++) {
 			for (int j = 0; j < Testes.matrix_zBuffer.length; j++) {
@@ -55,13 +54,14 @@ public class BibOps {
 	}
 
 	public static void atualizar_zBuffer(int i, int j, double profundidadeAtual, Color cor) {
-		if (i < Testes.xmax && i >= 0 && j < Testes.ymax && j>= 0 && Testes.matrix_zBuffer[i][j].profundidade < profundidadeAtual) {
+		if (i < Testes.xmax && i >= 0 && j < Testes.ymax && j >= 0
+				&& Testes.matrix_zBuffer[i][j].profundidade < profundidadeAtual) {
 			Testes.matrix_zBuffer[i][j].profundidade = profundidadeAtual;
 			Testes.matrix_zBuffer[i][j].corDoPixel = cor;
 		}
 	}
 
-	public static double[][] matrixMulti(double[][]A, double[][] B, int x1, int y1, int x2, int y2) {
+	public static double[][] matrixMulti(double[][] A, double[][] B, int x1, int y1, int x2, int y2) {
 		double[] C[] = new double[x1][y2];
 
 		for (int i = 0; i < x1; i++) {
@@ -176,13 +176,14 @@ public class BibOps {
 		return new Ponto3D(resposta[0][0], resposta[1][0], 1 - resposta[0][0] - resposta[1][0]);
 	}
 
-	public static Ponto2D cartesianaDaBaricentrica(Ponto2D p1, Ponto2D p2, Ponto2D p3, double alfa, double beta,
+	public static Ponto3D cartesianaDaBaricentrica(Ponto3D p1, Ponto3D p2, Ponto3D p3, double alfa, double beta,
 			double gama) {
 
 		double x = alfa * p1.x + beta * p2.x + gama * p3.x;
 		double y = alfa * p1.y + beta * p2.y + gama * p3.y;
+		double z = alfa * p1.z + beta * p2.z + gama * p3.z;
 
-		return new Ponto2D(x, y);
+		return new Ponto3D(x, y, z);
 	}
 
 	public static double[][] inversa(double m[][], double determinante) {
@@ -262,7 +263,7 @@ public class BibOps {
 		}
 
 	}
-	
+
 	public static Triangulo trianguloOrdenado(Triangulo t) {
 		Ponto3D inicio = null, meio = null, fim = null;
 		double ymin = Math.min(t.a.y, t.b.y);
@@ -296,7 +297,7 @@ public class BibOps {
 			}
 		}
 		return new Triangulo(inicio, meio, fim);
-		
+
 	}
 
 	public static void preencherTrianguloSuperior(GraphicsContext gc, Ponto2D inicio, Ponto2D meio, Ponto2D fim,
@@ -319,38 +320,7 @@ public class BibOps {
 			double aux = Math.max(inicio.x, meio.x);
 			aux = Math.max(aux, fim.x);
 			for (int x = (int) Math.round(xmin); x <= (int) Math.round(xmax) && x < aux; x++) {
-				Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
-				Triangulo ord = trianguloOrdenado(t);
-				Ponto3D auxa = somarPontos(produtoPonto3DPorEscalar(ord.a, q.x),produtoPonto3DPorEscalar(ord.b, q.y));
-				Ponto3D p = somarPontos(auxa, produtoPonto3DPorEscalar(ord.c, q.z));
-				
-				double[][] n1 = produtoPorEscalar(t.original1.normal, p.x);
-				double[][] n2 = produtoPorEscalar(t.original2.normal, p.y);
-				double[][] n3 = produtoPorEscalar(t.original3.normal, p.z);
-				n1 = somarVetores3D(n1, n2);
-				p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
-				double[][] N = p.normal;
-				double[][] V = normalizaVetor3D(subtPontos3D(Testes.camera.C, p));
-				double[][] L = normalizaVetor3D(subtPontos3D(Testes.iluminacao.Pl, p));
-				double[][] R = calcularR(N, L);
-				Ponto3D Ia, Id, Is;
-				if (produtoEscalar3D(R, V) < 0) {
-					Is = new Ponto3D(0, 0, 0);
-				} else {
-					Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il, Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta) * Testes.iluminacao.Ks);
-				}
-				if (produtoEscalar3D(N, L) < 0) {
-					Is = new Ponto3D(0, 0, 0);
-					Id = new Ponto3D(0, 0, 0);
-				} else {
-					Id = produtoComponentePonto3D(Testes.iluminacao.Il, produtoPonto3DPorEscalar(Testes.iluminacao.Od,
-							produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
-				}
-				Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
-
-				Ponto3D I = somarPontos(Ia, Id);
-				I = somarPontos(Is, I);
-				atualizar_zBuffer(Math.round(x), scanlineY, p.z, Color.rgb((int)Math.round(I.x), (int)Math.round(I.y), (int)Math.round(I.z)));
+				calcularCor(x, scanlineY, inicio, meio, fim, t);
 			}
 			xmin += coefRetaMin;
 			xmax += coefRetaMax;
@@ -372,44 +342,49 @@ public class BibOps {
 		double xmin = Math.round(fim.x);
 		for (int scanlineY = (int) Math.round(fim.y); scanlineY >= (int) Math.round(meio.y); scanlineY--) {
 			for (int x = (int) Math.round(xmin); x <= (int) Math.round(xmax); x++) {
-				
-				Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
-				Triangulo ord = trianguloOrdenado(t);
-				Ponto3D auxa = somarPontos(produtoPonto3DPorEscalar(ord.a, q.x),produtoPonto3DPorEscalar(ord.b, q.y));
-				Ponto3D p = somarPontos(auxa, produtoPonto3DPorEscalar(ord.c, q.z));
-				
-				double[][] n1 = produtoPorEscalar(t.original1.normal, p.x);
-				double[][] n2 = produtoPorEscalar(t.original2.normal, p.y);
-				double[][] n3 = produtoPorEscalar(t.original3.normal, p.z);
-				n1 = somarVetores3D(n1, n2);
-				p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
-				double[][] N = p.normal;
-				double[][] V = normalizaVetor3D(subtPontos3D(Testes.camera.C, p));
-				double[][] L = normalizaVetor3D(subtPontos3D(Testes.iluminacao.Pl, p));
-				double[][] R = calcularR(N, L);
-				Ponto3D Ia, Id, Is;
-				if (produtoEscalar3D(R, V) < 0) {
-					Is = new Ponto3D(0, 0, 0);
-				} else {
-					Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il, Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta) * Testes.iluminacao.Ks);
-				}
-				if (produtoEscalar3D(N, L) < 0) {
-					Is = new Ponto3D(0, 0, 0);
-					Id = new Ponto3D(0, 0, 0);
-				} else {
-					Id = produtoComponentePonto3D(Testes.iluminacao.Il, produtoPonto3DPorEscalar(Testes.iluminacao.Od,
-							produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
-				}
-				Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
-
-				Ponto3D I = somarPontos(Ia, Id);
-				I = somarPontos(Is, I);
-
-				atualizar_zBuffer(Math.round(x), scanlineY, p.z, Color.rgb((int)Math.round(I.x), (int)Math.round(I.y), (int)Math.round(I.z)));
+				calcularCor(x, scanlineY, inicio, meio, fim, t);
 			}
 			xmin -= coefRetaMin;
 			xmax -= coefRetaMax;
 		}
+	}
+	
+	private static void calcularCor(int x, int scanlineY, Ponto2D inicio, Ponto2D meio, Ponto2D fim, Triangulo t) {
+		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
+		Triangulo ord = trianguloOrdenado(t);
+		Ponto3D auxa = somarPontos(produtoPonto3DPorEscalar(ord.a, q.x), produtoPonto3DPorEscalar(ord.b, q.y));
+		//Ponto3D p = somarPontos(auxa, produtoPonto3DPorEscalar(ord.c, q.z));
+		Ponto3D p = cartesianaDaBaricentrica(ord.a, ord.b, ord.c, q.x, q.y, q.z);
+		double[][] n1 = produtoPorEscalar(t.original1.normal, p.x);
+		double[][] n2 = produtoPorEscalar(t.original2.normal, p.y);
+		double[][] n3 = produtoPorEscalar(t.original3.normal, p.z);
+		n1 = somarVetores3D(n1, n2);
+		p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
+		double[][] N = p.normal;
+		double[][] V = normalizaVetor3D(subtPontos3D(Testes.camera.C, p));
+		double[][] L = normalizaVetor3D(subtPontos3D(Testes.iluminacao.Pl, p));
+		double[][] R = calcularR(N, L);
+		Ponto3D Ia, Id, Is;
+		if (produtoEscalar3D(R, V) < 0) {
+			Is = new Ponto3D(0, 0, 0);
+		} else {
+			Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il,
+					Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta) * Testes.iluminacao.Ks);
+		}
+		if (produtoEscalar3D(N, L) < 0) {
+			Is = new Ponto3D(0, 0, 0);
+			Id = new Ponto3D(0, 0, 0);
+		} else {
+			Id = produtoComponentePonto3D(Testes.iluminacao.Il, produtoPonto3DPorEscalar(Testes.iluminacao.Od,
+					produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
+		}
+		Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
+
+		Ponto3D I = somarPontos(Ia, Id);
+		I = somarPontos(Is, I);
+
+		atualizar_zBuffer(Math.round(x), scanlineY, p.z,
+				Color.rgb((int) Math.round(I.x), (int) Math.round(I.y), (int) Math.round(I.z)));
 	}
 
 	private static double[][] calcularR(double[][] N, double[][] L) {
@@ -491,7 +466,7 @@ public class BibOps {
 			double pontoB[] = projetaPontoNaTela(Testes.t[i].b, xmax, ymax);
 
 			double pontoC[] = projetaPontoNaTela(Testes.t[i].c, xmax, ymax);
-			
+
 			listaDePontos.add(new double[][] { pontoA, pontoB, pontoC });
 
 			gc.setFill(Color.WHITE); // Cor do Ponto
@@ -504,7 +479,7 @@ public class BibOps {
 		scanLineEmListaDePontos(listaDePontos, gc, Testes.t);
 
 	}
-	
+
 	public static double[] projetaPontoNaTela(Ponto3D a, int xmax, int ymax) {
 		double pontoA[] = new double[2];
 		pontoA[0] = (Testes.camera.d * a.x) / (a.z * Testes.camera.hx);
@@ -514,7 +489,6 @@ public class BibOps {
 
 		return pontoA;
 	}
-
 
 	private static void scanLineEmListaDePontos(ArrayList<double[][]> listaDePontos, GraphicsContext gc,
 			Triangulo t[]) {
@@ -569,7 +543,7 @@ public class BibOps {
 		normal[1][0] = 0;
 		normal[2][0] = 0;
 		ArrayList<Triangulo> listaDeTriangulos = triangulosDeUmPonto(vertice, t);
-//		System.out.println(listaDeTriangulos.size());
+		// System.out.println(listaDeTriangulos.size());
 		for (int i = 0; i < listaDeTriangulos.size(); i++) {
 			normal = somarVetores3D(normal, listaDeTriangulos.get(i).normal);
 
