@@ -43,7 +43,7 @@ public class BibOps {
 	}
 
 	public static void iniciarMatriz_zBuffer() {
-		Testes.matrix_zBuffer = new Objetto_zBuffer[Testes.xmax][Testes.ymax];
+		Testes.matrix_zBuffer = new Objetto_zBuffer[(int)Testes.xmax][(int)Testes.ymax];
 		for (int i = 0; i < Testes.matrix_zBuffer.length; i++) {
 			for (int j = 0; j < Testes.matrix_zBuffer.length; j++) {
 				Testes.matrix_zBuffer[i][j] = new Objetto_zBuffer();
@@ -220,7 +220,9 @@ public class BibOps {
 	public static void scanLine(Ponto2D a, Ponto2D b, Ponto2D c, GraphicsContext gc, Triangulo t) {
 		double ymin = Math.min(a.y, b.y);
 		ymin = Math.min(ymin, c.y);
-
+//		System.out.println(a.x);
+//		System.out.println(b.x);
+//		System.out.println(c.x);
 		Ponto2D inicio = null, meio = null, fim = null;
 		if (ymin == a.y) {
 			inicio = a;
@@ -252,6 +254,8 @@ public class BibOps {
 		} else {
 			System.err.println("ymin não corresponde a nada");
 		}
+		
+		//analisarOrdem(inicio, meio, fim);
 
 		if ((int) meio.y == (int) fim.y) {
 			preencherTrianguloSuperior(gc, inicio, meio, fim, t);
@@ -340,7 +344,8 @@ public class BibOps {
 
 		double xmax = Math.round(fim.x);
 		double xmin = Math.round(fim.x);
-		for (int scanlineY = (int) Math.round(fim.y); scanlineY >= (int) Math.round(meio.y); scanlineY--) {
+		int scanlineY = 0;
+		for (scanlineY = (int) Math.round(fim.y); scanlineY >= (int) Math.round(meio.y); scanlineY--) {
 			for (int x = (int) Math.round(xmin); x <= (int) Math.round(xmax); x++) {
 				calcularCor(x, scanlineY, inicio, meio, fim, t);
 			}
@@ -352,8 +357,6 @@ public class BibOps {
 	private static void calcularCor(int x, int scanlineY, Ponto2D inicio, Ponto2D meio, Ponto2D fim, Triangulo t) {
 		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
 		Triangulo ord = trianguloOrdenado(t);
-		Ponto3D auxa = somarPontos(produtoPonto3DPorEscalar(ord.a, q.x), produtoPonto3DPorEscalar(ord.b, q.y));
-		// Ponto3D p = somarPontos(auxa, produtoPonto3DPorEscalar(ord.c, q.z));
 		Ponto3D p = cartesianaDaBaricentrica(ord.a, ord.b, ord.c, q.x, q.y, q.z);
 		double[][] n1 = produtoPorEscalar(t.original1.normal, p.x);
 		double[][] n2 = produtoPorEscalar(t.original2.normal, p.y);
@@ -384,7 +387,7 @@ public class BibOps {
 		I = somarPontos(Is, I);
 
 		atualizar_zBuffer(Math.round(x), scanlineY, p.z,
-				Color.rgb((int) Math.round(I.x), (int) Math.round(I.y), (int) Math.round(I.z)));
+				Color.rgb(Math.min((int) Math.round(I.x), 255), Math.min((int) Math.round(I.y), 255), Math.min((int) Math.round(I.z), 255)));
 	}
 
 	private static double[][] calcularR(double[][] N, double[][] L) {
@@ -406,7 +409,7 @@ public class BibOps {
 		}
 	}
 
-	public static void malhaPontos(GraphicsContext gc, int xmax, int ymax) {
+	public static void malhaPontos(GraphicsContext gc, double xmax, double ymax) {
 		gc.setFill(Color.BLUEVIOLET); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
 		double maxX = Testes.p[0].x, maxY = Testes.p[0].y;
@@ -435,7 +438,7 @@ public class BibOps {
 		}
 	}
 
-	public static void malhaTriangulos(GraphicsContext gc, int xmax, int ymax) {
+	public static void malhaTriangulos(GraphicsContext gc, double xmax, double ymax) {
 		ArrayList<double[][]> listaDePontos = new ArrayList<double[][]>();
 
 		gc.setFill(Color.BLACK); // Cor do fundo
@@ -480,13 +483,12 @@ public class BibOps {
 
 	}
 
-	public static double[] projetaPontoNaTela(Ponto3D a, int xmax, int ymax) {
+	public static double[] projetaPontoNaTela(Ponto3D a, double xmax, double ymax) {
 		double pontoA[] = new double[2];
 		pontoA[0] = (Testes.camera.d * a.x) / (a.z * Testes.camera.hx);
 		pontoA[1] = (Testes.camera.d * a.y) / (a.z * Testes.camera.hy);
 		pontoA[0] = Math.floor(((pontoA[0] + 1) / 2) * xmax + 0.5);
 		pontoA[1] = Math.floor(ymax - ((pontoA[1] + 1) / 2) * ymax + 0.5);
-
 		return pontoA;
 	}
 
@@ -619,7 +621,17 @@ public class BibOps {
 		retorno[0][0] = vet[0][0] * escalar;
 		retorno[1][0] = vet[1][0] * escalar;
 		retorno[2][0] = vet[2][0] * escalar;
-
 		return retorno;
+	}
+	
+	public static void imprimeMatriz(double m[][], int x, int y) {
+		for (int i = 0; i < x; i++) {
+			System.out.print("[");
+			for (int j = 0; j < y; j++) {
+				System.out.print(m[i][j] + " ");
+			}
+			System.out.println("]");
+		}
+		System.out.println("---------------------");
 	}
 }

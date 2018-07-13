@@ -118,9 +118,9 @@ public class Testes extends Application {
 		System.out.println();
 
 		System.out.println("1H - Coordenada Cartesiana");
-		Ponto2D p2 = BibOps.cartesianaDaBaricentrica(new Ponto2D(-1, 1), new Ponto2D(0, -1), new Ponto2D(1, 1), 0.5,
+		Ponto3D p2 = BibOps.cartesianaDaBaricentrica(new Ponto3D(-1, 1, 1), new Ponto3D(2, 0, -1), new Ponto3D(1, 1, 3), 0.5,
 				0.25, 0.25);
-		System.out.println("P = (" + p2.x + ", " + p2.y + ")");
+		System.out.println("P = (" + p2.x + ", " + p2.y + ", " + p2.z +")");
 		System.out.println("---------------------");
 		
 	}
@@ -153,10 +153,7 @@ public class Testes extends Application {
 		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.5);
 		iluminacao.Ks = 0.5;
 		iluminacao.Eta = 1;
-//getPontosArquivo("calice2");
-//		p[0].normal = new double[][]{{ 42}, {30}, {10}};
-//		imprimeMatriz(t[0].a.normal, 3, 1);
-
+		
 		System.out.println("comecou");
 		launch(args);
 
@@ -170,7 +167,7 @@ public class Testes extends Application {
 	public static Triangulo t[];
 	public static Triangulo triangulosOrdenadosPara_zBuffer[];
 	public static Objetto_zBuffer[][] matrix_zBuffer;
-	public static int xmax = 500, ymax = 500;
+	public static double xmax = 500, ymax = 500;
 	public static String arquivo = "calice2";
 	public static int atual = 0;
 
