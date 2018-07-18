@@ -168,7 +168,7 @@ public class Testes extends Application {
 	public static Triangulo triangulosOrdenadosPara_zBuffer[];
 	public static Objetto_zBuffer[][] matrix_zBuffer;
 	public static double xmax = 500, ymax = 500;
-	public static String arquivo = "calice2";
+	public static String arquivo = "vaso";
 	public static int atual = 0;
 
 	public static void getPontosArquivo(String arquivoSemExtensao) {
