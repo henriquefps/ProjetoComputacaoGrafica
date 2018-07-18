@@ -152,7 +152,7 @@ public class Testes extends Application {
 		iluminacao.Kd = new Ponto3D(0.5, 0.3, 0.2);
 		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.5);
 		iluminacao.Ks = 0.5;
-		iluminacao.Eta = 1;
+		iluminacao.Eta = 2;
 		
 		System.out.println("comecou");
 		launch(args);

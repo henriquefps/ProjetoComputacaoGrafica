@@ -269,6 +269,9 @@ public class BibOps {
 	}
 
 	private static Triangulo trianguloOrdenado(Triangulo t) {
+		t.a.normal = t.original1.normal;
+		t.b.normal = t.original2.normal;
+		t.c.normal = t.original3.normal;
 		Ponto3D inicio = null, meio = null, fim = null;
 		double ymin = Math.min(t.a.y, t.b.y);
 		ymin = Math.min(ymin, t.c.y);
@@ -300,7 +303,9 @@ public class BibOps {
 				fim = t.b;
 			}
 		}
-		return new Triangulo(inicio, meio, fim);
+		Triangulo r = new Triangulo(inicio, meio, fim);
+		r.normal = t.normal;
+		return r;
 
 	}
 
@@ -388,15 +393,16 @@ public class BibOps {
 
 	private static void calcularCor(int x, int scanlineY, Ponto2D inicio, Ponto2D meio, Ponto2D fim, Triangulo t) {
 //		Converter para coordenadas mundiais
+//		TODO Ordenar por coordenadas de tela em um ponto 3D
 		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
 		Triangulo ord = trianguloOrdenado(t);
 		Ponto3D p = cartesianaDaBaricentrica(ord.a, ord.b, ord.c, q.x, q.y, q.z);
 		p.z = -p.z;
 
 //		Calcular normal de P
-		double[][] n1 = produtoPorEscalar(t.original1.normal, p.x);
-		double[][] n2 = produtoPorEscalar(t.original2.normal, p.y);
-		double[][] n3 = produtoPorEscalar(t.original3.normal, p.z);
+		double[][] n1 = produtoPorEscalar(ord.a.normal, p.x);
+		double[][] n2 = produtoPorEscalar(ord.b.normal, p.y);
+		double[][] n3 = produtoPorEscalar(ord.c.normal, p.z);
 		n1 = somarVetores3D(n1, n2);
 		p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
 
@@ -409,7 +415,7 @@ public class BibOps {
 
 //		Casos Especiais
 		if (produtoEscalar3D(N, L) < 0) {
-			if (produtoEscalar3D(N, V) < 0) {
+			if (produtoEscalar3D(V, N) < 0) {
 				N[0][0] -= 2 * N[0][0];
 				N[1][0] -= 2 * N[1][0];
 				N[2][0] -= 2 * N[2][0];
@@ -429,10 +435,8 @@ public class BibOps {
 		if (produtoEscalar3D(R, V) < 0) {
 			Is = new Ponto3D(0, 0, 0);
 		} else {
-			Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il,
-					Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta) * Testes.iluminacao.Ks);
+			Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il, Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta) *  Testes.iluminacao.Ks);
 		}
-
 		Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
 		Ponto3D I = somarPontos(Ia, Id);
 
@@ -607,13 +611,13 @@ public class BibOps {
 	}
 
 	private static double[][] normalDoTriangulo(Triangulo a) {
-		return produtoVetorial3D(subtPontos3D(a.b, a.a), subtPontos3D(a.c, a.a));
+		return normalizaVetor3D(produtoVetorial3D(subtPontos3D(a.b, a.a), subtPontos3D(a.c, a.a)));
 	}
 
 	private static ArrayList<double[][]> normaisDosTriangulos(Triangulo[] t) {
 		ArrayList<double[][]> listaDeNormais = new ArrayList<double[][]>();
 		for (int i = 0; i < t.length; i++) {
-			listaDeNormais.add(normalizaVetor3D(normalDoTriangulo(t[i])));
+			listaDeNormais.add(normalDoTriangulo(t[i]));
 			t[i].normal = listaDeNormais.get(i);
 		}
 		return listaDeNormais;
@@ -632,6 +636,7 @@ public class BibOps {
 		for (int i = 0; i < t.length; i++) {
 			if (t[i].original1 == ponto || t[i].original2 == ponto || t[i].original3 == ponto) {
 				lista.add(t[i]);
+//				System.out.println("t" + i);
 			}
 		}
 		return lista;
@@ -643,10 +648,9 @@ public class BibOps {
 		normal[1][0] = 0;
 		normal[2][0] = 0;
 		ArrayList<Triangulo> listaDeTriangulos = triangulosDeUmPonto(vertice, t);
-		System.out.println(Testes.atual + " " + listaDeTriangulos.size());
+		System.out.println(listaDeTriangulos.size());
 		for (int i = 0; i < listaDeTriangulos.size(); i++) {
 			normal = somarVetores3D(normal, listaDeTriangulos.get(i).normal);
-
 		}
 		return normal;
 	}
