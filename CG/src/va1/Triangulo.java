@@ -3,6 +3,7 @@ package va1;
 public class Triangulo {
 	public Ponto3D a, b, c, baricentro;
 	public double[][] normal;
+	public Ponto2D telaA, telaB, telaC;
 	public Ponto3D original1, original2, original3;
 	public Triangulo(Ponto3D a, Ponto3D b, Ponto3D c){
 		this.a = a;

@@ -1,6 +1,7 @@
 package va1;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -101,7 +102,7 @@ public class BibOps {
 		}
 		return v;
 	}
-
+                                                                
 	private static Ponto3D produtoComponentePonto3D(Ponto3D a, Ponto3D b) {
 		return new Ponto3D(a.x * b.x, a.y * b.y, a.z * b.z);
 	}
@@ -139,8 +140,34 @@ public class BibOps {
 		vetor[2][0] = matrizAux[0][2] * matrizAux[1][0] * matrizAux[2][1]
 				- (matrizAux[0][2] * matrizAux[1][1] * matrizAux[2][0]);
 
+
 		return vetor;
 	}
+	
+	public static double[][] produtoVetorial3DMaoEsq(double[][] A, double[][] B) {
+		double[] vetor[] = new double[3][1];
+		double[] matrizAux[] = new double[3][3];
+
+		for (int i = 0; i < 3; i++) {
+			matrizAux[0][i] = 1;
+			matrizAux[1][i] = A[i][0];
+			matrizAux[2][i] = B[i][0];
+		}
+
+		vetor[0][0] = matrizAux[0][0] * matrizAux[1][1] * matrizAux[2][2]
+				- (matrizAux[0][0] * matrizAux[1][2] * matrizAux[2][1]);
+		vetor[1][0] = matrizAux[0][1] * matrizAux[1][2] * matrizAux[2][0]
+				- (matrizAux[0][1] * matrizAux[1][0] * matrizAux[2][2]);
+		vetor[2][0] = matrizAux[0][2] * matrizAux[1][0] * matrizAux[2][1]
+				- (matrizAux[0][2] * matrizAux[1][1] * matrizAux[2][0]);
+
+		vetor[0][0] -= 2 * vetor[0][0];
+		vetor[1][0] -= 2 * vetor[1][0];
+		vetor[2][0] -= 2 * vetor[2][0];
+		
+		return vetor;
+	}
+	
 
 	public static double normaVetor3D(double[][] A) {
 		return Math.sqrt(Math.pow(A[0][0], 2) + Math.pow(A[1][0], 2) + Math.pow(A[2][0], 2));
@@ -316,7 +343,6 @@ public class BibOps {
 			coefRetaMin = (meio.x - inicio.x) / (meio.y - inicio.y);
 			coefRetaMax = (fim.x - inicio.x) / (fim.y - inicio.y);
 		} else {
-
 			coefRetaMin = (fim.x - inicio.x) / (fim.y - inicio.y);
 			coefRetaMax = (meio.x - inicio.x) / (meio.y - inicio.y);
 		}
@@ -393,55 +419,62 @@ public class BibOps {
 
 	private static void calcularCor(int x, int scanlineY, Ponto2D inicio, Ponto2D meio, Ponto2D fim, Triangulo t) {
 //		Converter para coordenadas mundiais
-//		TODO Ordenar por coordenadas de tela em um ponto 3D
+//	    TODO Ordenar por coordenadas de tela em um ponto 3D 
 		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
 		Triangulo ord = trianguloOrdenado(t);
 		Ponto3D p = cartesianaDaBaricentrica(ord.a, ord.b, ord.c, q.x, q.y, q.z);
-		p.z = -p.z;
+		
 
 //		Calcular normal de P
 		double[][] n1 = produtoPorEscalar(ord.a.normal, p.x);
 		double[][] n2 = produtoPorEscalar(ord.b.normal, p.y);
-		double[][] n3 = produtoPorEscalar(ord.c.normal, p.z);
+		double[][] n3 = produtoPorEscalar(ord.c.normal, p.z); 
 		n1 = somarVetores3D(n1, n2);
 		p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
 
 //		Calcular outros parâmetros de P
 		double[][] N = p.normal;
-		double[][] V = normalizaVetor3D(subtPontos3D(Testes.camera.C, p));
+		double[][] V = normalizaVetor3D(subtPontos3D(new Ponto3D(0, 0, 0), p));
 		double[][] L = normalizaVetor3D(subtPontos3D(Testes.iluminacao.Pl, p));
+		double[][] R = normalizaVetor3D(calcularR(N, L));
+		
+//		imprimeMatriz(N, 3, 1);
+//		imprimeMatriz(V, 3, 1);
+//		imprimeMatriz(L, 3, 1);
+//		imprimeMatriz(R, 3, 1);
+//		System.out.println();
+		Ponto3D Ia = null, Id = null, Is = null;
 
-		Ponto3D Ia, Id, Is;
 
+		Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
+		
 //		Casos Especiais
 		if (produtoEscalar3D(N, L) < 0) {
-			if (produtoEscalar3D(V, N) < 0) {
+			if (produtoEscalar3D(N, V) < 0) {
 				N[0][0] -= 2 * N[0][0];
 				N[1][0] -= 2 * N[1][0];
 				N[2][0] -= 2 * N[2][0];
-				Id = produtoComponentePonto3D(Testes.iluminacao.Il,
-						produtoPonto3DPorEscalar(Testes.iluminacao.Od, produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
 			} else {
 				Is = new Ponto3D(0, 0, 0);
 				Id = new Ponto3D(0, 0, 0);
 			}
-		} else {
-			Id = produtoComponentePonto3D(Testes.iluminacao.Il,
-					produtoPonto3DPorEscalar(Testes.iluminacao.Od, produtoEscalar3D(N, L) * Testes.iluminacao.Ks));
 		}
-
-		double[][] R = normalizaVetor3D(calcularR(N, L));
-
+		
 		if (produtoEscalar3D(R, V) < 0) {
 			Is = new Ponto3D(0, 0, 0);
-		} else {
-			Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il, Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta) *  Testes.iluminacao.Ks);
 		}
-		Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
+		
+		if (Is == null) {
+			Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il, Testes.iluminacao.Ks * Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta));
+		}
+		if (Id == null) {
+			Id = produtoComponentePonto3D(Testes.iluminacao.Kd, produtoComponentePonto3D(Testes.iluminacao.Il, produtoPonto3DPorEscalar(Testes.iluminacao.Od, produtoEscalar3D(N, L))));
+		}
+		
 		Ponto3D I = somarPontos(Ia, Id);
-
-//		Limites RGB
 		I = somarPontos(Is, I);
+		
+//		Limites RGB
 		I.x = Math.min((int) Math.round(I.x), 255);
 		I.x = Math.max((int) Math.round(I.x), 0);
 		I.y = Math.min((int) Math.round(I.y), 255);
@@ -450,6 +483,7 @@ public class BibOps {
 		I.z = Math.max((int) Math.round(I.z), 0);
 
 //        System.out.println(Id.x + " " + Id.y + " " + Id.z);
+		p.z = -p.z;
 		atualizar_zBuffer(Math.round(x), scanlineY, p.z, Color.rgb((int) I.x, (int) I.y, (int) I.z));
 	}
 
@@ -507,33 +541,36 @@ public class BibOps {
 
 		gc.setFill(Color.BLACK); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
-		double maxX = Testes.t[0].a.x, maxY = Testes.t[0].a.y;
-		double minX = Testes.t[0].a.x, minY = Testes.t[0].a.y;
-		for (int i = 0; i < Testes.t.length; i++) {
-			maxX = Math.max(maxX, Testes.t[i].a.x);
-			maxX = Math.max(maxX, Testes.t[i].b.x);
-			maxX = Math.max(maxX, Testes.t[i].c.x);
+		double maxX = Testes.triangulosOrdenadosPara_zBuffer[0].a.x, maxY = Testes.triangulosOrdenadosPara_zBuffer[0].a.y;
+		double minX = Testes.triangulosOrdenadosPara_zBuffer[0].a.x, minY = Testes.triangulosOrdenadosPara_zBuffer[0].a.y;
+		for (int i = 0; i < Testes.triangulosOrdenadosPara_zBuffer.length; i++) {
+			maxX = Math.max(maxX, Testes.triangulosOrdenadosPara_zBuffer[i].a.x);
+			maxX = Math.max(maxX, Testes.triangulosOrdenadosPara_zBuffer[i].b.x);
+			maxX = Math.max(maxX, Testes.triangulosOrdenadosPara_zBuffer[i].c.x);
 
-			maxY = Math.max(maxY, Testes.t[i].a.y);
-			maxY = Math.max(maxY, Testes.t[i].b.y);
-			maxY = Math.max(maxY, Testes.t[i].c.y);
+			maxY = Math.max(maxY, Testes.triangulosOrdenadosPara_zBuffer[i].a.y);
+			maxY = Math.max(maxY, Testes.triangulosOrdenadosPara_zBuffer[i].b.y);
+			maxY = Math.max(maxY, Testes.triangulosOrdenadosPara_zBuffer[i].c.y);
 
-			minX = Math.min(minX, Testes.t[i].a.x);
-			minX = Math.min(minX, Testes.t[i].b.x);
-			minX = Math.min(minX, Testes.t[i].c.x);
+			minX = Math.min(minX, Testes.triangulosOrdenadosPara_zBuffer[i].a.x);
+			minX = Math.min(minX, Testes.triangulosOrdenadosPara_zBuffer[i].b.x);
+			minX = Math.min(minX, Testes.triangulosOrdenadosPara_zBuffer[i].c.x);
 
-			minY = Math.min(minY, Testes.t[i].a.y);
-			minY = Math.min(minY, Testes.t[i].b.y);
-			minY = Math.min(minY, Testes.t[i].c.y);
+			minY = Math.min(minY, Testes.triangulosOrdenadosPara_zBuffer[i].a.y);
+			minY = Math.min(minY, Testes.triangulosOrdenadosPara_zBuffer[i].b.y);
+			minY = Math.min(minY, Testes.triangulosOrdenadosPara_zBuffer[i].c.y);
 
 		}
-		for (int i = 0; i < Testes.t.length; i++) {
-			double pontoA[] = projetaPontoNaTela(Testes.t[i].a, xmax, ymax);
+		for (int i = 0; i < Testes.triangulosOrdenadosPara_zBuffer.length; i++) {
+			double pontoA[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].a, xmax, ymax);
 
-			double pontoB[] = projetaPontoNaTela(Testes.t[i].b, xmax, ymax);
+			double pontoB[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].b, xmax, ymax);
 
-			double pontoC[] = projetaPontoNaTela(Testes.t[i].c, xmax, ymax);
-
+			double pontoC[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].c, xmax, ymax);
+			
+			Testes.triangulosOrdenadosPara_zBuffer[i].telaA = new Ponto2D(pontoA[0], pontoA[1]);
+			Testes.triangulosOrdenadosPara_zBuffer[i].telaB = new Ponto2D(pontoB[0], pontoB[1]);
+			Testes.triangulosOrdenadosPara_zBuffer[i].telaC = new Ponto2D(pontoC[0], pontoC[1]);
 			listaDePontos.add(new double[][] { pontoA, pontoB, pontoC });
 
 			gc.setFill(Color.WHITE); // Cor do Ponto
@@ -543,7 +580,7 @@ public class BibOps {
 
 		}
 
-		scanLineEmListaDePontos(listaDePontos, gc, Testes.t);
+		scanLineEmListaDePontos(listaDePontos, gc, Testes.triangulosOrdenadosPara_zBuffer);
 
 	}
 
@@ -611,7 +648,7 @@ public class BibOps {
 	}
 
 	private static double[][] normalDoTriangulo(Triangulo a) {
-		return normalizaVetor3D(produtoVetorial3D(subtPontos3D(a.b, a.a), subtPontos3D(a.c, a.a)));
+		return normalizaVetor3D(produtoVetorial3DMaoEsq(subtPontos3D(a.b, a.a), subtPontos3D(a.c, a.a)));
 	}
 
 	private static ArrayList<double[][]> normaisDosTriangulos(Triangulo[] t) {
@@ -634,10 +671,8 @@ public class BibOps {
 	private static ArrayList<Triangulo> triangulosDeUmPonto(Ponto3D ponto, Triangulo t[]) {
 		ArrayList<Triangulo> lista = new ArrayList<Triangulo>();
 		for (int i = 0; i < t.length; i++) {
-			if (t[i].original1 == ponto || t[i].original2 == ponto || t[i].original3 == ponto) {
+			if (t[i].original1 == ponto || t[i].original2 == ponto || t[i].original3 == ponto)
 				lista.add(t[i]);
-//				System.out.println("t" + i);
-			}
 		}
 		return lista;
 	}
@@ -648,7 +683,7 @@ public class BibOps {
 		normal[1][0] = 0;
 		normal[2][0] = 0;
 		ArrayList<Triangulo> listaDeTriangulos = triangulosDeUmPonto(vertice, t);
-		System.out.println(listaDeTriangulos.size());
+		// System.out.println(listaDeTriangulos.size());
 		for (int i = 0; i < listaDeTriangulos.size(); i++) {
 			normal = somarVetores3D(normal, listaDeTriangulos.get(i).normal);
 		}
@@ -727,13 +762,13 @@ public class BibOps {
 	}
 
 	public static void imprimeMatriz(double m[][], int x, int y) {
+		System.out.print("(");
 		for (int i = 0; i < x; i++) {
-			System.out.print("[");
 			for (int j = 0; j < y; j++) {
-				System.out.print(m[i][j] + " ");
+				System.out.print(m[i][j] + ", ");
 			}
-			System.out.println("]");
 		}
+		System.out.println(")");
 		System.out.println("---------------------");
 	}
 }

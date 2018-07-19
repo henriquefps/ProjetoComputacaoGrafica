@@ -150,7 +150,7 @@ public class Testes extends Application {
 		iluminacao.Il = new Ponto3D(127, 213, 254);
 		iluminacao.Pl = new Ponto3D(60, 5, -10);
 		iluminacao.Kd = new Ponto3D(0.5, 0.3, 0.2);
-		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.5);
+		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.8);
 		iluminacao.Ks = 0.5;
 		iluminacao.Eta = 2;
 		
@@ -178,6 +178,7 @@ public class Testes extends Application {
 			String qnt[] = linha.split(" ");
 			p = new Ponto3D[Integer.parseInt(qnt[0])];
 			t = new Triangulo[Integer.parseInt(qnt[1])];
+			System.out.println(qnt[0] + " " + qnt[1]);
 			for (int i = 0; i < p.length; i++) {
 				linha = reader.readLine();
 				qnt = linha.split(" ");
