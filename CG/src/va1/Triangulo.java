@@ -7,8 +7,11 @@ public class Triangulo {
 	public Ponto3D original1, original2, original3;
 	public Triangulo(Ponto3D a, Ponto3D b, Ponto3D c){
 		this.a = a;
+		this.a.vertice = "a";
 		this.b = b;
+		this.b.vertice = "b";
 		this.c = c;
+		this.c.vertice = "c";
 	}
 	
 	public void setBaricentro() {
@@ -20,6 +23,10 @@ public class Triangulo {
 		original1 = a;
 		original2 = b;
 		original3 = c;
+	}
+	
+	public void reorganizarPorTela(Ponto2D inicio, Ponto2D meio, Ponto2D fim) {
+		
 	}
 	
 }

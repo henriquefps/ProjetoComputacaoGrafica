@@ -94,6 +94,16 @@ public class BibOps {
 
 		return vetor;
 	}
+	
+	public static double[][] subtPontos2D(Ponto2D q, Ponto2D p) {
+		double vetor[][] = new double[2][1];
+
+		vetor[0][0] = q.x - p.x;
+		vetor[1][0] = q.y - p.y;
+
+		return vetor;
+	}
+	
 
 	public static double produtoEscalar3D(double[][] A, double[][] B) {
 		double v = 0;
@@ -249,36 +259,36 @@ public class BibOps {
 		t.c = BibOps.coordenadasDeVista(camera, t.c);
 	}
 
-	private static void scanLine(Ponto2D a, Ponto2D b, Ponto2D c, GraphicsContext gc, Triangulo t) {
-		double ymin = Math.min(a.y, b.y);
-		ymin = Math.min(ymin, c.y);
+	private static void scanLine(GraphicsContext gc, Triangulo t) {
+		double ymin = Math.min(t.telaA.y, t.telaB.y);
+		ymin = Math.min(ymin, t.telaC.y);
 		Ponto2D inicio = null, meio = null, fim = null;
-		if (ymin == a.y) {
-			inicio = a;
-			if (b.y <= c.y) {
-				meio = b;
-				fim = c;
+		if (ymin == t.telaA.y) {
+			inicio = t.telaA;
+			if (t.telaB.y <= t.telaC.y) {
+				meio = t.telaB;
+				fim = t.telaC;
 			} else {
-				meio = c;
-				fim = b;
+				meio = t.telaC;
+				fim = t.telaB;
 			}
-		} else if (ymin == b.y) {
-			inicio = b;
-			if (a.y <= c.y) {
-				meio = a;
-				fim = c;
+		} else if (ymin == t.telaB.y) {
+			inicio = t.telaB;
+			if (t.telaA.y <= t.telaC.y) {
+				meio = t.telaA;
+				fim = t.telaC;
 			} else {
-				meio = c;
-				fim = a;
+				meio = t.telaC;
+				fim = t.telaA;
 			}
-		} else if (ymin == c.y) {
-			inicio = c;
-			if (b.y <= a.y) {
-				meio = b;
-				fim = a;
+		} else if (ymin == t.telaC.y) {
+			inicio = t.telaC;
+			if (t.telaB.y <= t.telaA.y) {
+				meio = t.telaB;
+				fim = t.telaA;
 			} else {
-				meio = a;
-				fim = b;
+				meio = t.telaA;
+				fim = t.telaB;
 			}
 		} else {
 			System.err.println("ymin não corresponde a nada");
@@ -296,9 +306,7 @@ public class BibOps {
 	}
 
 	private static Triangulo trianguloOrdenado(Triangulo t) {
-		t.a.normal = t.original1.normal;
-		t.b.normal = t.original2.normal;
-		t.c.normal = t.original3.normal;
+		
 		Ponto3D inicio = null, meio = null, fim = null;
 		double ymin = Math.min(t.a.y, t.b.y);
 		ymin = Math.min(ymin, t.c.y);
@@ -419,16 +427,17 @@ public class BibOps {
 
 	private static void calcularCor(int x, int scanlineY, Ponto2D inicio, Ponto2D meio, Ponto2D fim, Triangulo t) {
 //		Converter para coordenadas mundiais
-//	    TODO Ordenar por coordenadas de tela em um ponto 3D 
-		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), inicio, meio, fim);
-		Triangulo ord = trianguloOrdenado(t);
-		Ponto3D p = cartesianaDaBaricentrica(ord.a, ord.b, ord.c, q.x, q.y, q.z);
+		t.a.normal = t.original1.normal;
+		t.b.normal = t.original2.normal;
+		t.c.normal = t.original3.normal;
+		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), t.telaA, t.telaB, t.telaC);
+		Ponto3D p = cartesianaDaBaricentrica(t.a, t.b, t.c, q.x, q.y, q.z);
 		
 
 //		Calcular normal de P
-		double[][] n1 = produtoPorEscalar(ord.a.normal, p.x);
-		double[][] n2 = produtoPorEscalar(ord.b.normal, p.y);
-		double[][] n3 = produtoPorEscalar(ord.c.normal, p.z); 
+		double[][] n1 = produtoPorEscalar(t.a.normal, q.x);
+		double[][] n2 = produtoPorEscalar(t.b.normal, q.y);
+		double[][] n3 = produtoPorEscalar(t.c.normal, q.z); 
 		n1 = somarVetores3D(n1, n2);
 		p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
 
@@ -438,6 +447,7 @@ public class BibOps {
 		double[][] L = normalizaVetor3D(subtPontos3D(Testes.iluminacao.Pl, p));
 		double[][] R = normalizaVetor3D(calcularR(N, L));
 		
+		//System.out.println("(" + N[0][0] + " " + N[1][0] + " " + N[2][0] + ")");
 //		imprimeMatriz(N, 3, 1);
 //		imprimeMatriz(V, 3, 1);
 //		imprimeMatriz(L, 3, 1);
@@ -568,19 +578,17 @@ public class BibOps {
 
 			double pontoC[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].c, xmax, ymax);
 			
-			Testes.triangulosOrdenadosPara_zBuffer[i].telaA = new Ponto2D(pontoA[0], pontoA[1]);
-			Testes.triangulosOrdenadosPara_zBuffer[i].telaB = new Ponto2D(pontoB[0], pontoB[1]);
-			Testes.triangulosOrdenadosPara_zBuffer[i].telaC = new Ponto2D(pontoC[0], pontoC[1]);
-			listaDePontos.add(new double[][] { pontoA, pontoB, pontoC });
+			Testes.triangulosOrdenadosPara_zBuffer[i].telaA = new Ponto2D(pontoA[0], pontoA[1], "a");
+			Testes.triangulosOrdenadosPara_zBuffer[i].telaB = new Ponto2D(pontoB[0], pontoB[1], "b");
+			Testes.triangulosOrdenadosPara_zBuffer[i].telaC = new Ponto2D(pontoC[0], pontoC[1], "c");
 
 			gc.setFill(Color.WHITE); // Cor do Ponto
 			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
+			scanLine(gc, Testes.triangulosOrdenadosPara_zBuffer[i]);
 
 		}
-
-		scanLineEmListaDePontos(listaDePontos, gc, Testes.triangulosOrdenadosPara_zBuffer);
 
 	}
 
@@ -617,7 +625,7 @@ public class BibOps {
 
 		gc.setFill(Color.WHITE); // Cor do Ponto
 
-		scanLine(pontoDeVetor2x1(pontoA), pontoDeVetor2x1(pontoB), pontoDeVetor2x1(pontoC), gc, Testes.t[Testes.atual]);
+		//scanLine(pontoDeVetor2x1(pontoA), pontoDeVetor2x1(pontoB), pontoDeVetor2x1(pontoC), gc, Testes.t[Testes.atual]);
 		System.out.println(Testes.atual);
 		Testes.atual++;
 	}
@@ -631,15 +639,15 @@ public class BibOps {
 		return pontoA;
 	}
 
-	private static void scanLineEmListaDePontos(ArrayList<double[][]> listaDePontos, GraphicsContext gc,
-			Triangulo t[]) {
-		for (int i = 0; i < listaDePontos.size(); i++) {
-			BibOps.scanLine(new Ponto2D(listaDePontos.get(i)[0][0], listaDePontos.get(i)[0][1]),
-					new Ponto2D(listaDePontos.get(i)[1][0], listaDePontos.get(i)[1][1]),
-					new Ponto2D(listaDePontos.get(i)[2][0], listaDePontos.get(i)[2][1]), gc, t[i]);
-			Testes.atual++;
-		}
-	}
+//	private static void scanLineEmListaDePontos(ArrayList<double[][]> listaDePontos, GraphicsContext gc,
+//			Triangulo t[]) {
+//		for (int i = 0; i < listaDePontos.size(); i++) {
+//			BibOps.scanLine(new Ponto2D(listaDePontos.get(i)[0][0], listaDePontos.get(i)[0][1]),
+//					new Ponto2D(listaDePontos.get(i)[1][0], listaDePontos.get(i)[1][1]),
+//					new Ponto2D(listaDePontos.get(i)[2][0], listaDePontos.get(i)[2][1]), gc, t[i]);
+//			Testes.atual++;
+//		}
+//	}
 
 	private static void atualizarCoordVista(String arquivoSemExtensao) {
 		for (int i = 0; i < Testes.t.length; i++) {
