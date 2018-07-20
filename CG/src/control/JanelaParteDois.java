@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import va1.BibOps;
@@ -33,9 +34,6 @@ public class JanelaParteDois implements Initializable {
 
 	@FXML
 	private TextField cValue;
-	
-	@FXML
-	private TextField labelArquivo;
 
 	@FXML
 	private AnchorPane janela;
@@ -50,12 +48,41 @@ public class JanelaParteDois implements Initializable {
 	private Label alerta;
 
 	@FXML
-	void mudarPerspectiva(){
+	private MenuButton menuButtonArquivo;
+
+	@FXML
+	private TextField kaTextField;
+
+	@FXML
+	private TextField iambTextField;
+
+	@FXML
+	private TextField kdTextField;
+
+	@FXML
+	private TextField odTextField;
+
+	@FXML
+	private TextField etaTextField;
+
+	@FXML
+	private TextField ksTextField;
+
+	@FXML
+	private TextField ilTextField;
+
+	@FXML
+	private TextField plTextField;
+
+	@FXML
+	void mudarPerspectiva() {
 		Testes.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
 				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
-		
-		Testes.arquivo = labelArquivo.getText();
-		
+
+		Testes.iluminacao.atualizarParametros(Double.parseDouble(kaTextField.getText()),
+				Double.parseDouble(ksTextField.getText()), Double.parseDouble(etaTextField.getText()), getpl(), getil(),
+				getIamb(), getkd(), getod());
+
 		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
 
 	}
@@ -68,10 +95,18 @@ public class JanelaParteDois implements Initializable {
 		this.hxValue.setText("1.5");
 		this.hyValue.setText("1.5");
 		this.cValue.setText("0 -500 500");
-		this.labelArquivo.setText(Testes.arquivo);
-		
+		this.kaTextField.setText("0.2");
+		this.iambTextField.setText("100 100 100");
+		this.ilTextField.setText("127 213 254");
+		this.plTextField.setText("60 5 -10");
+		this.kdTextField.setText("0.5 0.3 0.2");
+		this.odTextField.setText("0.7 0 1");
+		this.ksTextField.setText("0.5");
+		this.etaTextField.setText("2");
+		menuButtonArquivo.setText(Testes.arquivo);
+
 		BibOps.executarTarefaInicial(desenho.getGraphicsContext2D());
-		
+
 	}
 
 	private Ponto3D getC() {
@@ -94,6 +129,81 @@ public class JanelaParteDois implements Initializable {
 		return dres;
 	}
 
+	private Ponto3D getIamb() {
+		double dres[][] = new double[3][1];
+		String[] res = this.iambTextField.getText().split(" ");
+		try {
+			if (res.length != 3)
+				throw new Exception();
+			dres[0][0] = Double.parseDouble(res[0]);
+			dres[1][0] = Double.parseDouble(res[1]);
+			dres[2][0] = Double.parseDouble(res[2]);
+		} catch (Exception e) {
+			alerta.setText("Vetor N deve possuir 3 valores");
+		}
+		return BibOps.pontoDeVetor3x1(dres);
+	}
+
+	private Ponto3D getil() {
+		double dres[][] = new double[3][1];
+		String[] res = this.ilTextField.getText().split(" ");
+		try {
+			if (res.length != 3)
+				throw new Exception();
+			dres[0][0] = Double.parseDouble(res[0]);
+			dres[1][0] = Double.parseDouble(res[1]);
+			dres[2][0] = Double.parseDouble(res[2]);
+		} catch (Exception e) {
+			alerta.setText("Vetor N deve possuir 3 valores");
+		}
+		return BibOps.pontoDeVetor3x1(dres);
+	}
+
+	private Ponto3D getpl() {
+		double dres[][] = new double[3][1];
+		String[] res = this.plTextField.getText().split(" ");
+		try {
+			if (res.length != 3)
+				throw new Exception();
+			dres[0][0] = Double.parseDouble(res[0]);
+			dres[1][0] = Double.parseDouble(res[1]);
+			dres[2][0] = Double.parseDouble(res[2]);
+		} catch (Exception e) {
+			alerta.setText("Vetor N deve possuir 3 valores");
+		}
+		return BibOps.pontoDeVetor3x1(dres);
+	}
+
+	private Ponto3D getkd() {
+		double dres[][] = new double[3][1];
+		String[] res = this.kdTextField.getText().split(" ");
+		try {
+			if (res.length != 3)
+				throw new Exception();
+			dres[0][0] = Double.parseDouble(res[0]);
+			dres[1][0] = Double.parseDouble(res[1]);
+			dres[2][0] = Double.parseDouble(res[2]);
+		} catch (Exception e) {
+			alerta.setText("Vetor N deve possuir 3 valores");
+		}
+		return BibOps.pontoDeVetor3x1(dres);
+	}
+
+	private Ponto3D getod() {
+		double dres[][] = new double[3][1];
+		String[] res = this.odTextField.getText().split(" ");
+		try {
+			if (res.length != 3)
+				throw new Exception();
+			dres[0][0] = Double.parseDouble(res[0]);
+			dres[1][0] = Double.parseDouble(res[1]);
+			dres[2][0] = Double.parseDouble(res[2]);
+		} catch (Exception e) {
+			alerta.setText("Vetor N deve possuir 3 valores");
+		}
+		return BibOps.pontoDeVetor3x1(dres);
+	}
+
 	private double[][] getV() {
 		double dres[][] = new double[3][1];
 		String[] res = this.vValue.getText().split(" ");
@@ -107,5 +217,33 @@ public class JanelaParteDois implements Initializable {
 			alerta.setText("Vetor V deve possuir 3 valores");
 		}
 		return dres;
+	}
+
+	@FXML
+	void setStringCalice2() {
+		Testes.arquivo = "calice2";
+		menuButtonArquivo.setText(Testes.arquivo);
+		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+	}
+
+	@FXML
+	void setStringMaca() {
+		Testes.arquivo = "maca";
+		menuButtonArquivo.setText(Testes.arquivo);
+		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+	}
+
+	@FXML
+	void setStringMaca2() {
+		Testes.arquivo = "maca2";
+		menuButtonArquivo.setText(Testes.arquivo);
+		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+	}
+
+	@FXML
+	void setStringVaso() {
+		Testes.arquivo = "vaso";
+		menuButtonArquivo.setText(Testes.arquivo);
+		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
 	}
 }

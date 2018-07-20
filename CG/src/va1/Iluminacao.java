@@ -14,6 +14,7 @@ public class Iluminacao {
 		Kd = kd;
 		Od = od;
 	}
+	 
 	
 	public Iluminacao() {
 		
@@ -83,7 +84,16 @@ public class Iluminacao {
 		Od = od;
 	}
 	
-	
+	public void atualizarParametros(double Ka, double Ks, double eta, Ponto3D pl, Ponto3D il, Ponto3D iamb, Ponto3D Kd, Ponto3D od) {
+		this.Ka = Ka;
+		this.Ks = Ks;
+		this.Eta = eta;
+		this.Pl = pl;
+		this.Il = il;
+		this.Iamb = iamb;
+		this.Kd = Kd;
+		this.Od = od;
+	}
 	
 	
 	

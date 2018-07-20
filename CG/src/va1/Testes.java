@@ -150,7 +150,7 @@ public class Testes extends Application {
 		iluminacao.Il = new Ponto3D(127, 213, 254);
 		iluminacao.Pl = new Ponto3D(60, 5, -10);
 		iluminacao.Kd = new Ponto3D(0.5, 0.3, 0.2);
-		iluminacao.Od = new Ponto3D(0.7, 0.5, 0.8);
+		iluminacao.Od = new Ponto3D(0.7, 0, 1);
 		iluminacao.Ks = 0.5;
 		iluminacao.Eta = 2;
 		
