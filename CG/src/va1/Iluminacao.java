@@ -2,7 +2,9 @@ package va1;
 
 public class Iluminacao {
 	public double Ka, Ks, Eta;
+	
 	public Ponto3D Iamb, Il, Pl, Kd, Od;
+	
 	public Iluminacao(double ka, double ks, double eta, Ponto3D iamb, Ponto3D il, Ponto3D pl, Ponto3D kd, Ponto3D od) {
 		super();
 		Ka = ka;
@@ -15,7 +17,6 @@ public class Iluminacao {
 		Od = od;
 	}
 	 
-	
 	public Iluminacao() {
 		
 	}
@@ -94,7 +95,5 @@ public class Iluminacao {
 		this.Kd = Kd;
 		this.Od = od;
 	}
-	
-	
 	
 }

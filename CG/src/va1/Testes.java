@@ -126,14 +126,7 @@ public class Testes extends Application {
 	}
 	public static void main(String[] args) throws IOException {
 		
-		//Questao1();
-		
-		// ################ Questao 2 ####################
-		// Coloque o nome do arquivo de pontos sem extensão
-		// getPontosArquivo("vaso");
-		// launch(args);
-
-		
+		Questao1();
 		
 		camera = new CameraVirtual();
 		camera.N = new double[][] { { 0 }, { 1.4 }, { -1 } };
@@ -154,12 +147,9 @@ public class Testes extends Application {
 		iluminacao.Ks = 0.5;
 		iluminacao.Eta = 2;
 		
-		System.out.println("comecou");
 		launch(args);
 
 	}
-	
-	
 	
 	public static CameraVirtual camera;
 	public static Iluminacao iluminacao;
@@ -178,7 +168,6 @@ public class Testes extends Application {
 			String qnt[] = linha.split(" ");
 			p = new Ponto3D[Integer.parseInt(qnt[0])];
 			t = new Triangulo[Integer.parseInt(qnt[1])];
-			System.out.println(qnt[0] + " " + qnt[1]);
 			for (int i = 0; i < p.length; i++) {
 				linha = reader.readLine();
 				qnt = linha.split(" ");
@@ -206,7 +195,7 @@ public class Testes extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Teste");
+		primaryStage.setTitle("Renderizar Objetos");
 		BorderPane pane = FXMLLoader.load(this.getClass().getResource("janelaProjetoP2.fxml"));
 		primaryStage.setScene(new Scene(pane));
 		primaryStage.setResizable(false);

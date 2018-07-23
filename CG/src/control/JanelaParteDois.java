@@ -76,6 +76,7 @@ public class JanelaParteDois implements Initializable {
 
 	@FXML
 	void mudarPerspectiva() {
+		alerta.setText("");
 		Testes.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
 				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
 
@@ -223,27 +224,41 @@ public class JanelaParteDois implements Initializable {
 	void setStringCalice2() {
 		Testes.arquivo = "calice2";
 		menuButtonArquivo.setText(Testes.arquivo);
-		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+		mudarPerspectiva();
 	}
 
 	@FXML
 	void setStringMaca() {
 		Testes.arquivo = "maca";
 		menuButtonArquivo.setText(Testes.arquivo);
-		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+		mudarPerspectiva();
 	}
 
 	@FXML
 	void setStringMaca2() {
 		Testes.arquivo = "maca2";
 		menuButtonArquivo.setText(Testes.arquivo);
-		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+		mudarPerspectiva();
 	}
 
 	@FXML
 	void setStringVaso() {
 		Testes.arquivo = "vaso";
 		menuButtonArquivo.setText(Testes.arquivo);
-		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+		mudarPerspectiva();
 	}
+	
+    @FXML
+    void setStringPiramide() {
+		Testes.arquivo = "piramide";
+		menuButtonArquivo.setText(Testes.arquivo);
+		mudarPerspectiva();
+    }
+
+    @FXML
+    void setStringTriangulo() {
+		Testes.arquivo = "triangulo";
+		menuButtonArquivo.setText(Testes.arquivo);
+		mudarPerspectiva();
+    }
 }

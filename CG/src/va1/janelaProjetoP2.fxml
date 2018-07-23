@@ -69,6 +69,8 @@
                             <MenuItem mnemonicParsing="false" onAction="#setStringCalice2" text="calice2" />
                               <MenuItem mnemonicParsing="false" onAction="#setStringMaca" text="maça" />
                               <MenuItem mnemonicParsing="false" onAction="#setStringMaca2" text="maça2" />
+                              <MenuItem mnemonicParsing="false" onAction="#setStringTriangulo" text="triangulo" />
+                              <MenuItem mnemonicParsing="false" onAction="#setStringPiramide" text="piramide" />
                           </items>
                         </MenuButton>
                      </children>
