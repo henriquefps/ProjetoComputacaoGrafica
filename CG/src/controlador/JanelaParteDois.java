@@ -1,4 +1,4 @@
-package control;
+package controlador;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,9 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import va1.BibOps;
-import va1.Ponto3D;
-import va1.Testes;
+import projeto.BibOps;
+import projeto.Ponto3D;
+import projeto.Main;
 
 public class JanelaParteDois implements Initializable {
 
@@ -77,10 +77,10 @@ public class JanelaParteDois implements Initializable {
 	@FXML
 	void mudarPerspectiva() {
 		alerta.setText("");
-		Testes.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
+		Main.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
 				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
 
-		Testes.iluminacao.atualizarParametros(Double.parseDouble(kaTextField.getText()),
+		Main.iluminacao.atualizarParametros(Double.parseDouble(kaTextField.getText()),
 				Double.parseDouble(ksTextField.getText()), Double.parseDouble(etaTextField.getText()), getpl(), getil(),
 				getIamb(), getkd(), getod());
 
@@ -104,7 +104,7 @@ public class JanelaParteDois implements Initializable {
 		this.odTextField.setText("0.7 0 1");
 		this.ksTextField.setText("0.5");
 		this.etaTextField.setText("2");
-		menuButtonArquivo.setText(Testes.arquivo);
+		menuButtonArquivo.setText(Main.arquivo);
 
 		BibOps.executarTarefaInicial(desenho.getGraphicsContext2D());
 
@@ -222,43 +222,43 @@ public class JanelaParteDois implements Initializable {
 
 	@FXML
 	void setStringCalice2() {
-		Testes.arquivo = "calice2";
-		menuButtonArquivo.setText(Testes.arquivo);
+		Main.arquivo = "calice2";
+		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void setStringMaca() {
-		Testes.arquivo = "maca";
-		menuButtonArquivo.setText(Testes.arquivo);
+		Main.arquivo = "maca";
+		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void setStringMaca2() {
-		Testes.arquivo = "maca2";
-		menuButtonArquivo.setText(Testes.arquivo);
+		Main.arquivo = "maca2";
+		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void setStringVaso() {
-		Testes.arquivo = "vaso";
-		menuButtonArquivo.setText(Testes.arquivo);
+		Main.arquivo = "vaso";
+		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
 	}
 	
     @FXML
     void setStringPiramide() {
-		Testes.arquivo = "piramide";
-		menuButtonArquivo.setText(Testes.arquivo);
+		Main.arquivo = "piramide";
+		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
     }
 
     @FXML
     void setStringTriangulo() {
-		Testes.arquivo = "triangulo";
-		menuButtonArquivo.setText(Testes.arquivo);
+		Main.arquivo = "triangulo";
+		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
     }
 }

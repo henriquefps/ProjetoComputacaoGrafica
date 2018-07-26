@@ -1,9 +1,9 @@
-package va1;
+package projeto;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import control.JanelaParteDois;
+import controlador.JanelaParteDois;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
@@ -14,15 +14,15 @@ public class BibOps {
 	 * JanelaParteDois.Initialize()
 	 */
 	public static void executarTarefaInicial(GraphicsContext desenho) {
-		Testes.getPontosArquivo(Testes.arquivo);
+		Main.getPontosArquivo(Main.arquivo);
 		BibOps.iniciarMatriz_zBuffer();
 		BibOps.setReferenciasOriginaisDosTriangulos();
-		BibOps.atualizarCoordVista(Testes.arquivo);
-		BibOps.normaisDosTriangulos(Testes.t);
-		BibOps.normaisDosVertices(Testes.p, Testes.t);
-		BibOps.setBaricentroTriangulos(Testes.t);
-		Testes.triangulosOrdenadosPara_zBuffer = BibOps.ordenarTriangulos_zBuffer(Testes.t);
-		BibOps.malhaTriangulos(desenho, Testes.xmax, Testes.ymax);
+		BibOps.atualizarCoordVista(Main.arquivo);
+		BibOps.normaisDosTriangulos(Main.t);
+		BibOps.normaisDosVertices(Main.p, Main.t);
+		BibOps.setBaricentroTriangulos(Main.t);
+		Main.triangulosOrdenadosPara_zBuffer = BibOps.ordenarTriangulos_zBuffer(Main.t);
+		BibOps.malhaTriangulos(desenho, Main.xmax, Main.ymax);
 		BibOps.pintar_zBuffer(desenho);
 	}
 
@@ -30,16 +30,16 @@ public class BibOps {
 	 * Funcao chamada sempre que o botao calcular e ativado
 	 */
 	public static void executarTarefaBotao(GraphicsContext desenho) {
-		desenho.fillRect(0, 0, Testes.xmax, Testes.ymax);
-		Testes.getPontosArquivo(Testes.arquivo);
+		desenho.fillRect(0, 0, Main.xmax, Main.ymax);
+		Main.getPontosArquivo(Main.arquivo);
 		BibOps.iniciarMatriz_zBuffer();
 		BibOps.setReferenciasOriginaisDosTriangulos();
-		BibOps.atualizarCoordVista(Testes.arquivo);
-		BibOps.normaisDosTriangulos(Testes.t);
-		BibOps.normaisDosVertices(Testes.p, Testes.t);
-		BibOps.setBaricentroTriangulos(Testes.t);
-		Testes.triangulosOrdenadosPara_zBuffer = BibOps.ordenarTriangulos_zBuffer(Testes.t);
-		BibOps.malhaTriangulos(desenho, Testes.xmax, Testes.ymax);
+		BibOps.atualizarCoordVista(Main.arquivo);
+		BibOps.normaisDosTriangulos(Main.t);
+		BibOps.normaisDosVertices(Main.p, Main.t);
+		BibOps.setBaricentroTriangulos(Main.t);
+		Main.triangulosOrdenadosPara_zBuffer = BibOps.ordenarTriangulos_zBuffer(Main.t);
+		BibOps.malhaTriangulos(desenho, Main.xmax, Main.ymax);
 		BibOps.pintar_zBuffer(desenho);
 	}
 	/*
@@ -47,21 +47,21 @@ public class BibOps {
 	 */
 
 	private static void pintar_zBuffer(GraphicsContext desenho) {
-		for (int i = 0; i < Testes.xmax; i++) {
-			for (int j = 0; j < Testes.ymax; j++) {
-				desenho.setFill(Testes.matrix_zBuffer[i][j].corDoPixel);
+		for (int i = 0; i < Main.xmax; i++) {
+			for (int j = 0; j < Main.ymax; j++) {
+				desenho.setFill(Main.matrix_zBuffer[i][j].corDoPixel);
 				desenho.fillRect(i, j, 1, 1);
 			}
 		}
 	}
 
 	private static void iniciarMatriz_zBuffer() {
-		Testes.matrix_zBuffer = new Objetto_zBuffer[(int) Testes.xmax][(int) Testes.ymax];
-		for (int i = 0; i < Testes.matrix_zBuffer.length; i++) {
-			for (int j = 0; j < Testes.matrix_zBuffer.length; j++) {
-				Testes.matrix_zBuffer[i][j] = new Objetto_zBuffer();
-				Testes.matrix_zBuffer[i][j].corDoPixel = Color.BLACK;
-				Testes.matrix_zBuffer[i][j].profundidade = Double.NEGATIVE_INFINITY;
+		Main.matrix_zBuffer = new Objetto_zBuffer[(int) Main.xmax][(int) Main.ymax];
+		for (int i = 0; i < Main.matrix_zBuffer.length; i++) {
+			for (int j = 0; j < Main.matrix_zBuffer.length; j++) {
+				Main.matrix_zBuffer[i][j] = new Objetto_zBuffer();
+				Main.matrix_zBuffer[i][j].corDoPixel = Color.BLACK;
+				Main.matrix_zBuffer[i][j].profundidade = Double.NEGATIVE_INFINITY;
 			}
 		}
 	}
@@ -70,10 +70,10 @@ public class BibOps {
 	 * Verifica se o zBuffer deve ser atualizado, e atualiza se necessario
 	 */
 	private static void atualizar_zBuffer(int i, int j, double profundidadeAtual, Color cor) {
-		if (i < Testes.xmax && i >= 0 && j < Testes.ymax && j >= 0
-				&& Testes.matrix_zBuffer[i][j].profundidade < profundidadeAtual) {
-			Testes.matrix_zBuffer[i][j].profundidade = profundidadeAtual;
-			Testes.matrix_zBuffer[i][j].corDoPixel = cor;
+		if (i < Main.xmax && i >= 0 && j < Main.ymax && j >= 0
+				&& Main.matrix_zBuffer[i][j].profundidade < profundidadeAtual) {
+			Main.matrix_zBuffer[i][j].profundidade = profundidadeAtual;
+			Main.matrix_zBuffer[i][j].corDoPixel = cor;
 		}
 	}
 
@@ -105,6 +105,8 @@ public class BibOps {
 		vetor[0][0] = q.x - p.x;
 		vetor[1][0] = q.y - p.y;
 		vetor[2][0] = q.z - p.z;
+		
+		imprimeMatriz(vetor, 3, 1);
 
 		return vetor;
 	}
@@ -398,64 +400,59 @@ public class BibOps {
 		t.a.normal = t.original1.normal;
 		t.b.normal = t.original2.normal;
 		t.c.normal = t.original3.normal;
+
 		Ponto3D q = coordBaricentricas2D(new Ponto2D(x, scanlineY), t.telaA, t.telaB, t.telaC);
 		Ponto3D p = cartesianaDaBaricentrica(t.a, t.b, t.c, q.x, q.y, q.z);
 
-//		Calcular normal de P
-		double[][] n1 = produtoPorEscalar(t.a.normal, q.x);
-		double[][] n2 = produtoPorEscalar(t.b.normal, q.y);
-		double[][] n3 = produtoPorEscalar(t.c.normal, q.z);
-		n1 = somarVetores3D(n1, n2);
-		p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
-
-//		Calcular outros parâmetros de P
-		double[][] N = p.normal;
-		double[][] V = normalizaVetor3D(subtPontos3D(new Ponto3D(0, 0, 0), p));
-		double[][] L = normalizaVetor3D(subtPontos3D(Testes.iluminacao.Pl, p));
-		double[][] R = normalizaVetor3D(calcularR(N, L));
-
-		Ponto3D Ia = null, Id = null, Is = null;
-
-		Ia = produtoPonto3DPorEscalar(Testes.iluminacao.Iamb, Testes.iluminacao.Ka);
-
-//		Casos Especiais
-		if (produtoEscalar3D(N, L) < 0) {
-			if (produtoEscalar3D(N, V) < 0) {
-				N[0][0] -= 2 * N[0][0];
-				N[1][0] -= 2 * N[1][0];
-				N[2][0] -= 2 * N[2][0];
-			} else {
-				Is = new Ponto3D(0, 0, 0);
-				Id = new Ponto3D(0, 0, 0);
+		if (-p.z > Main.matrix_zBuffer[x][scanlineY].profundidade) {
+			// Calcular normal de P
+			double[][] n1 = produtoPorEscalar(t.a.normal, q.x);
+			double[][] n2 = produtoPorEscalar(t.b.normal, q.y);
+			double[][] n3 = produtoPorEscalar(t.c.normal, q.z);
+			n1 = somarVetores3D(n1, n2);
+			p.normal = normalizaVetor3D(somarVetores3D(n1, n3));
+			// Calcular outros parâmetros de P
+			double[][] N = p.normal;
+			double[][] V = normalizaVetor3D(subtPontos3D(new Ponto3D(0, 0, 0), p));
+			double[][] L = normalizaVetor3D(subtPontos3D(Main.iluminacao.Pl, p));
+			double[][] R = normalizaVetor3D(calcularR(N, L));
+			Ponto3D Ia = null, Id = null, Is = null;
+			Ia = produtoPonto3DPorEscalar(Main.iluminacao.Iamb, Main.iluminacao.Ka);
+			// Casos Especiais
+			if (produtoEscalar3D(N, L) < 0) {
+				if (produtoEscalar3D(N, V) < 0) {
+					N[0][0] -= 2 * N[0][0];
+					N[1][0] -= 2 * N[1][0];
+					N[2][0] -= 2 * N[2][0];
+				} else {
+					Is = new Ponto3D(0, 0, 0);
+					Id = new Ponto3D(0, 0, 0);
+				}
 			}
+			if (produtoEscalar3D(R, V) < 0) {
+				Is = new Ponto3D(0, 0, 0);
+			}
+			if (Is == null) {
+				Is = produtoPonto3DPorEscalar(Main.iluminacao.Il,
+						Main.iluminacao.Ks * Math.pow(produtoEscalar3D(R, V), Main.iluminacao.Eta));
+			}
+			if (Id == null) {
+				Id = produtoComponentePonto3D(Main.iluminacao.Kd, produtoComponentePonto3D(Main.iluminacao.Il,
+						produtoPonto3DPorEscalar(Main.iluminacao.Od, produtoEscalar3D(N, L))));
+			}
+			Ponto3D I = somarPontos(Ia, Id);
+			I = somarPontos(Is, I);
+			// Limites RGB
+			I.x = Math.min((int) Math.round(I.x), 255);
+			I.x = Math.max((int) Math.round(I.x), 0);
+			I.y = Math.min((int) Math.round(I.y), 255);
+			I.y = Math.max((int) Math.round(I.y), 0);
+			I.z = Math.min((int) Math.round(I.z), 255);
+			I.z = Math.max((int) Math.round(I.z), 0);
+			p.z = -p.z;
+			//imprimeMatriz(N, 3, 1);
+			atualizar_zBuffer(Math.round(x), scanlineY, p.z, Color.rgb((int) I.x, (int) I.y, (int) I.z));
 		}
-
-		if (produtoEscalar3D(R, V) < 0) {
-			Is = new Ponto3D(0, 0, 0);
-		}
-
-		if (Is == null) {
-			Is = produtoPonto3DPorEscalar(Testes.iluminacao.Il,
-					Testes.iluminacao.Ks * Math.pow(produtoEscalar3D(R, V), Testes.iluminacao.Eta));
-		}
-		if (Id == null) {
-			Id = produtoComponentePonto3D(Testes.iluminacao.Kd, produtoComponentePonto3D(Testes.iluminacao.Il,
-					produtoPonto3DPorEscalar(Testes.iluminacao.Od, produtoEscalar3D(N, L))));
-		}
-
-		Ponto3D I = somarPontos(Ia, Id);
-		I = somarPontos(Is, I);
-
-//		Limites RGB
-		I.x = Math.min((int) Math.round(I.x), 255);
-		I.x = Math.max((int) Math.round(I.x), 0);
-		I.y = Math.min((int) Math.round(I.y), 255);
-		I.y = Math.max((int) Math.round(I.y), 0);
-		I.z = Math.min((int) Math.round(I.z), 255);
-		I.z = Math.max((int) Math.round(I.z), 0);
-
-		p.z = -p.z;
-		atualizar_zBuffer(Math.round(x), scanlineY, p.z, Color.rgb((int) I.x, (int) I.y, (int) I.z));
 	}
 
 	private static double[][] calcularR(double[][] N, double[][] L) {
@@ -479,28 +476,28 @@ public class BibOps {
 	}
 
 	public static void malhaPontos(GraphicsContext gc, double xmax, double ymax) {
-		gc.setFill(Color.BLUEVIOLET); // Cor do fundo
+		gc.setFill(Color.BLACK); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
-		double maxX = Testes.p[0].x, maxY = Testes.p[0].y;
-		double minX = Testes.p[0].x, minY = Testes.p[0].y;
-		for (int i = 1; i < Testes.p.length; i++) {
-			if (Testes.p[i].x > maxX) {
-				maxX = Testes.p[i].x;
+		double maxX = Main.p[0].x, maxY = Main.p[0].y;
+		double minX = Main.p[0].x, minY = Main.p[0].y;
+		for (int i = 1; i < Main.p.length; i++) {
+			if (Main.p[i].x > maxX) {
+				maxX = Main.p[i].x;
 			}
-			if (Testes.p[i].y > maxY) {
-				maxY = Testes.p[i].y;
+			if (Main.p[i].y > maxY) {
+				maxY = Main.p[i].y;
 			}
 
-			if (Testes.p[i].x < minX) {
-				minX = Testes.p[i].x;
+			if (Main.p[i].x < minX) {
+				minX = Main.p[i].x;
 			}
-			if (Testes.p[i].y < minY) {
-				minY = Testes.p[i].y;
+			if (Main.p[i].y < minY) {
+				minY = Main.p[i].y;
 			}
 		}
-		for (int i = 0; i < Testes.p.length; i++) {
-			double ponto[] = projetaPontoNaTela(Testes.p[i], xmax, ymax);
-			gc.setFill(Color.GOLD); // Cor do Ponto
+		for (int i = 0; i < Main.p.length; i++) {
+			double ponto[] = projetaPontoNaTela(Main.p[i], xmax, ymax);
+			gc.setFill(Color.WHITE); // Cor do Ponto
 			gc.fillRect(ponto[0], ponto[1], 3, 3); // Tamanho do Ponto
 		}
 	}
@@ -508,44 +505,42 @@ public class BibOps {
 	private static void malhaTriangulos(GraphicsContext gc, double xmax, double ymax) {
 		gc.setFill(Color.BLACK); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
-		double maxX = Testes.triangulosOrdenadosPara_zBuffer[0].a.x,
-				maxY = Testes.triangulosOrdenadosPara_zBuffer[0].a.y;
-		double minX = Testes.triangulosOrdenadosPara_zBuffer[0].a.x,
-				minY = Testes.triangulosOrdenadosPara_zBuffer[0].a.y;
-		for (int i = 0; i < Testes.triangulosOrdenadosPara_zBuffer.length; i++) {
-			maxX = Math.max(maxX, Testes.triangulosOrdenadosPara_zBuffer[i].a.x);
-			maxX = Math.max(maxX, Testes.triangulosOrdenadosPara_zBuffer[i].b.x);
-			maxX = Math.max(maxX, Testes.triangulosOrdenadosPara_zBuffer[i].c.x);
+		double maxX = Main.triangulosOrdenadosPara_zBuffer[0].a.x, maxY = Main.triangulosOrdenadosPara_zBuffer[0].a.y;
+		double minX = Main.triangulosOrdenadosPara_zBuffer[0].a.x, minY = Main.triangulosOrdenadosPara_zBuffer[0].a.y;
+		for (int i = 0; i < Main.triangulosOrdenadosPara_zBuffer.length; i++) {
+			maxX = Math.max(maxX, Main.triangulosOrdenadosPara_zBuffer[i].a.x);
+			maxX = Math.max(maxX, Main.triangulosOrdenadosPara_zBuffer[i].b.x);
+			maxX = Math.max(maxX, Main.triangulosOrdenadosPara_zBuffer[i].c.x);
 
-			maxY = Math.max(maxY, Testes.triangulosOrdenadosPara_zBuffer[i].a.y);
-			maxY = Math.max(maxY, Testes.triangulosOrdenadosPara_zBuffer[i].b.y);
-			maxY = Math.max(maxY, Testes.triangulosOrdenadosPara_zBuffer[i].c.y);
+			maxY = Math.max(maxY, Main.triangulosOrdenadosPara_zBuffer[i].a.y);
+			maxY = Math.max(maxY, Main.triangulosOrdenadosPara_zBuffer[i].b.y);
+			maxY = Math.max(maxY, Main.triangulosOrdenadosPara_zBuffer[i].c.y);
 
-			minX = Math.min(minX, Testes.triangulosOrdenadosPara_zBuffer[i].a.x);
-			minX = Math.min(minX, Testes.triangulosOrdenadosPara_zBuffer[i].b.x);
-			minX = Math.min(minX, Testes.triangulosOrdenadosPara_zBuffer[i].c.x);
+			minX = Math.min(minX, Main.triangulosOrdenadosPara_zBuffer[i].a.x);
+			minX = Math.min(minX, Main.triangulosOrdenadosPara_zBuffer[i].b.x);
+			minX = Math.min(minX, Main.triangulosOrdenadosPara_zBuffer[i].c.x);
 
-			minY = Math.min(minY, Testes.triangulosOrdenadosPara_zBuffer[i].a.y);
-			minY = Math.min(minY, Testes.triangulosOrdenadosPara_zBuffer[i].b.y);
-			minY = Math.min(minY, Testes.triangulosOrdenadosPara_zBuffer[i].c.y);
+			minY = Math.min(minY, Main.triangulosOrdenadosPara_zBuffer[i].a.y);
+			minY = Math.min(minY, Main.triangulosOrdenadosPara_zBuffer[i].b.y);
+			minY = Math.min(minY, Main.triangulosOrdenadosPara_zBuffer[i].c.y);
 
 		}
-		for (int i = 0; i < Testes.triangulosOrdenadosPara_zBuffer.length; i++) {
-			double pontoA[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].a, xmax, ymax);
+		for (int i = 0; i < Main.triangulosOrdenadosPara_zBuffer.length; i++) {
+			double pontoA[] = projetaPontoNaTela(Main.triangulosOrdenadosPara_zBuffer[i].a, xmax, ymax);
 
-			double pontoB[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].b, xmax, ymax);
+			double pontoB[] = projetaPontoNaTela(Main.triangulosOrdenadosPara_zBuffer[i].b, xmax, ymax);
 
-			double pontoC[] = projetaPontoNaTela(Testes.triangulosOrdenadosPara_zBuffer[i].c, xmax, ymax);
+			double pontoC[] = projetaPontoNaTela(Main.triangulosOrdenadosPara_zBuffer[i].c, xmax, ymax);
 
-			Testes.triangulosOrdenadosPara_zBuffer[i].telaA = new Ponto2D(pontoA[0], pontoA[1], "a");
-			Testes.triangulosOrdenadosPara_zBuffer[i].telaB = new Ponto2D(pontoB[0], pontoB[1], "b");
-			Testes.triangulosOrdenadosPara_zBuffer[i].telaC = new Ponto2D(pontoC[0], pontoC[1], "c");
+			Main.triangulosOrdenadosPara_zBuffer[i].telaA = new Ponto2D(pontoA[0], pontoA[1], "a");
+			Main.triangulosOrdenadosPara_zBuffer[i].telaB = new Ponto2D(pontoB[0], pontoB[1], "b");
+			Main.triangulosOrdenadosPara_zBuffer[i].telaC = new Ponto2D(pontoC[0], pontoC[1], "c");
 
 			gc.setFill(Color.WHITE); // Cor do Ponto
 			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
 			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
-			scanLine(gc, Testes.triangulosOrdenadosPara_zBuffer[i]);
+			scanLine(gc, Main.triangulosOrdenadosPara_zBuffer[i]);
 
 		}
 
@@ -555,56 +550,57 @@ public class BibOps {
 	private static void malhaTriangulosDebug(GraphicsContext gc, double xmax, double ymax) {
 		gc.setFill(Color.BLACK); // Cor do fundo
 		gc.fillRect(0, 0, xmax, ymax); // Pinta o fundo
-		double maxX = Testes.t[0].a.x, maxY = Testes.t[0].a.y;
-		double minX = Testes.t[0].a.x, minY = Testes.t[0].a.y;
-		for (int i = 0; i < Testes.t.length; i++) {
-			maxX = Math.max(maxX, Testes.t[i].a.x);
-			maxX = Math.max(maxX, Testes.t[i].b.x);
-			maxX = Math.max(maxX, Testes.t[i].c.x);
+		double maxX = Main.t[0].a.x, maxY = Main.t[0].a.y;
+		double minX = Main.t[0].a.x, minY = Main.t[0].a.y;
+		for (int i = 0; i < Main.t.length; i++) {
+			maxX = Math.max(maxX, Main.t[i].a.x);
+			maxX = Math.max(maxX, Main.t[i].b.x);
+			maxX = Math.max(maxX, Main.t[i].c.x);
 
-			maxY = Math.max(maxY, Testes.t[i].a.y);
-			maxY = Math.max(maxY, Testes.t[i].b.y);
-			maxY = Math.max(maxY, Testes.t[i].c.y);
+			maxY = Math.max(maxY, Main.t[i].a.y);
+			maxY = Math.max(maxY, Main.t[i].b.y);
+			maxY = Math.max(maxY, Main.t[i].c.y);
 
-			minX = Math.min(minX, Testes.t[i].a.x);
-			minX = Math.min(minX, Testes.t[i].b.x);
-			minX = Math.min(minX, Testes.t[i].c.x);
+			minX = Math.min(minX, Main.t[i].a.x);
+			minX = Math.min(minX, Main.t[i].b.x);
+			minX = Math.min(minX, Main.t[i].c.x);
 
-			minY = Math.min(minY, Testes.t[i].a.y);
-			minY = Math.min(minY, Testes.t[i].b.y);
-			minY = Math.min(minY, Testes.t[i].c.y);
+			minY = Math.min(minY, Main.t[i].a.y);
+			minY = Math.min(minY, Main.t[i].b.y);
+			minY = Math.min(minY, Main.t[i].c.y);
 
 		}
 
-		double pontoA[] = projetaPontoNaTela(Testes.t[Testes.atual].a, xmax, ymax);
+		double pontoA[] = projetaPontoNaTela(Main.t[Main.atual].a, xmax, ymax);
 
-		double pontoB[] = projetaPontoNaTela(Testes.t[Testes.atual].b, xmax, ymax);
+		double pontoB[] = projetaPontoNaTela(Main.t[Main.atual].b, xmax, ymax);
 
-		double pontoC[] = projetaPontoNaTela(Testes.t[Testes.atual].c, xmax, ymax);
+		double pontoC[] = projetaPontoNaTela(Main.t[Main.atual].c, xmax, ymax);
 
 		gc.setFill(Color.WHITE); // Cor do Ponto
 
-		scanLine(gc, Testes.t[Testes.atual]);
-		System.out.println(Testes.atual);
-		Testes.atual++;
+		scanLine(gc, Main.t[Main.atual]);
+		System.out.println(Main.atual);
+		Main.atual++;
 	}
 
 	private static double[] projetaPontoNaTela(Ponto3D a, double xmax, double ymax) {
 		double pontoA[] = new double[2];
-		pontoA[0] = (Testes.camera.d * a.x) / (a.z * Testes.camera.hx);
-		pontoA[1] = (Testes.camera.d * a.y) / (a.z * Testes.camera.hy);
+		pontoA[0] = (Main.camera.d * a.x) / (a.z * Main.camera.hx);
+		pontoA[1] = (Main.camera.d * a.y) / (a.z * Main.camera.hy);
 		pontoA[0] = Math.floor(((pontoA[0] + 1) / 2) * xmax + 0.5);
 		pontoA[1] = Math.floor(ymax - ((pontoA[1] + 1) / 2) * ymax + 0.5);
 		return pontoA;
 	}
 
 	private static void atualizarCoordVista(String arquivoSemExtensao) {
-		for (int i = 0; i < Testes.t.length; i++) {
-			BibOps.atualizaTrianguloParaCoordVista(Testes.t[i], Testes.camera);
+		for (int i = 0; i < Main.t.length; i++) {
+			BibOps.atualizaTrianguloParaCoordVista(Main.t[i], Main.camera);
 		}
 	}
 
 	private static double[][] normalDoTriangulo(Triangulo a) {
+		System.out.println("Sub triangulo");
 		return normalizaVetor3D(produtoVetorial3DMaoEsq(subtPontos3D(a.b, a.a), subtPontos3D(a.c, a.a)));
 	}
 
@@ -643,6 +639,7 @@ public class BibOps {
 		for (int i = 0; i < listaDeTriangulos.size(); i++) {
 			normal = somarVetores3D(normal, listaDeTriangulos.get(i).normal);
 		}
+		//System.out.println(listaDeTriangulos.size());
 		return normal;
 	}
 
@@ -651,6 +648,7 @@ public class BibOps {
 		for (int i = 0; i < pontos.length; i++) {
 			listaDeNormais.add(normalizaVetor3D(normalDeUmVertice(pontos[i], t)));
 			pontos[i].normal = listaDeNormais.get(i);
+			//imprimeMatriz(pontos[i].normal, 3, 1);
 		}
 		return listaDeNormais;
 	}
@@ -662,8 +660,8 @@ public class BibOps {
 	}
 
 	private static void setReferenciasOriginaisDosTriangulos() {
-		for (int i = 0; i < Testes.t.length; i++) {
-			Testes.t[i].setOriginais();
+		for (int i = 0; i < Main.t.length; i++) {
+			Main.t[i].setOriginais();
 		}
 	}
 

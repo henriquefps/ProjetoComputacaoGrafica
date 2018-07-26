@@ -1,4 +1,4 @@
-package va1;
+package projeto;
 
 public class Iluminacao {
 	public double Ka, Ks, Eta;

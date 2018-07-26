@@ -1,4 +1,4 @@
-package va1;
+package projeto;
 
 public class Ponto2D {
 	double x, y;

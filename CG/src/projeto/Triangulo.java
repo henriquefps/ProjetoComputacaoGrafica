@@ -1,4 +1,4 @@
-package va1;
+package projeto;
 
 public class Triangulo {
 	public Ponto3D a, b, c, baricentro;
@@ -24,9 +24,4 @@ public class Triangulo {
 		original2 = b;
 		original3 = c;
 	}
-	
-	public void reorganizarPorTela(Ponto2D inicio, Ponto2D meio, Ponto2D fim) {
-		
-	}
-	
 }

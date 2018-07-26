@@ -1,10 +1,10 @@
-package va1;
+package projeto;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import control.JanelaParteDois;
+import controlador.JanelaParteDois;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class Testes extends Application {
+public class Main extends Application {
 
 	public static void imprimeMatriz(double m[][], int x, int y) {
 		for (int i = 0; i < x; i++) {
@@ -126,7 +126,7 @@ public class Testes extends Application {
 	}
 	public static void main(String[] args) throws IOException {
 		
-		Questao1();
+		//Questao1();
 		
 		camera = new CameraVirtual();
 		camera.N = new double[][] { { 0 }, { 1.4 }, { -1 } };
@@ -146,6 +146,7 @@ public class Testes extends Application {
 		iluminacao.Od = new Ponto3D(0.7, 0, 1);
 		iluminacao.Ks = 0.5;
 		iluminacao.Eta = 2;
+		System.out.println("Comecou");
 		
 		launch(args);
 

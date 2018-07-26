@@ -1,4 +1,4 @@
-package va1;
+package projeto;
 
 public class Ponto3D {
 	public double x, y, z;

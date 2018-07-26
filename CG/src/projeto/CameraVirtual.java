@@ -1,4 +1,4 @@
-package va1;
+package projeto;
 
 public class CameraVirtual {
 	public double U[][] = new double[3][1];
