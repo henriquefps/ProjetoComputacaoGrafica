@@ -75,8 +75,22 @@ public class JanelaParteDois implements Initializable {
 	private TextField plTextField;
 
 	@FXML
+	private TextField rxTextField;
+
+	@FXML
+	private TextField ryTextField;
+
+	@FXML
+	private TextField rzTextField;
+
+	@FXML
 	void mudarPerspectiva() {
 		alerta.setText("");
+		
+		Main.rotX = Integer.parseInt(rxTextField.getText().toString());
+		Main.rotY = Integer.parseInt(ryTextField.getText().toString());
+		Main.rotZ = Integer.parseInt(rzTextField.getText().toString());
+		
 		Main.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
 				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
 
@@ -105,6 +119,9 @@ public class JanelaParteDois implements Initializable {
 		this.ksTextField.setText("0.5");
 		this.etaTextField.setText("2");
 		menuButtonArquivo.setText(Main.arquivo);
+		this.rxTextField.setText(Main.rotX+"");
+		this.ryTextField.setText(Main.rotY+"");
+		this.rzTextField.setText(Main.rotZ+"");
 
 		BibOps.executarTarefaInicial(desenho.getGraphicsContext2D());
 
@@ -247,18 +264,18 @@ public class JanelaParteDois implements Initializable {
 		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
 	}
-	
-    @FXML
-    void setStringPiramide() {
+
+	@FXML
+	void setStringPiramide() {
 		Main.arquivo = "piramide";
 		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
-    }
+	}
 
-    @FXML
-    void setStringTriangulo() {
+	@FXML
+	void setStringTriangulo() {
 		Main.arquivo = "triangulo";
 		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
-    }
+	}
 }

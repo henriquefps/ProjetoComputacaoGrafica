@@ -16,7 +16,7 @@
    <left>
       <AnchorPane prefHeight="500.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="CENTER" layoutX="27.0" layoutY="22.0" prefHeight="500.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox alignment="CENTER" layoutX="27.0" layoutY="22.0" prefHeight="500.0" prefWidth="200.0" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label text="Câmera">
                      <font>
@@ -60,10 +60,9 @@
                      </children>
                   </HBox>
                   <Label fx:id="alerta" textFill="RED" />
-                  <Button fx:id="calcular" mnemonicParsing="false" onAction="#mudarPerspectiva" text="Calcular" />
-                  <AnchorPane prefHeight="80.0" prefWidth="200.0">
+                  <AnchorPane prefHeight="231.0" prefWidth="200.0">
                      <children>
-                        <MenuButton fx:id="menuButtonArquivo" layoutX="24.0" layoutY="27.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="152.0" text="Selecionar arquivo">
+                        <MenuButton fx:id="menuButtonArquivo" layoutX="24.0" layoutY="156.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="152.0" text="Selecionar arquivo">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#setStringVaso" text="vaso" />
                             <MenuItem mnemonicParsing="false" onAction="#setStringCalice2" text="calice2" />
@@ -73,6 +72,18 @@
                               <MenuItem mnemonicParsing="false" onAction="#setStringPiramide" text="piramide" />
                           </items>
                         </MenuButton>
+                        <TextField fx:id="rxTextField" layoutX="41.0" layoutY="44.0" prefHeight="27.0" prefWidth="145.0" />
+                        <TextField fx:id="ryTextField" layoutX="41.0" layoutY="71.0" prefHeight="27.0" prefWidth="145.0" />
+                        <TextField fx:id="rzTextField" layoutX="42.0" layoutY="98.0" prefHeight="27.0" prefWidth="144.0" />
+                        <Button fx:id="calcular" layoutX="61.0" layoutY="193.0" mnemonicParsing="false" onAction="#mudarPerspectiva" text="Calcular" />
+                        <Label layoutX="31.0" layoutY="14.0" text="Rotações (BETA)">
+                           <font>
+                              <Font name="Helvetica" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="12.0" layoutY="45.0" prefHeight="25.0" prefWidth="25.0" text="Xº" />
+                        <Label layoutX="12.0" layoutY="72.0" prefHeight="25.0" prefWidth="25.0" text="Yº" />
+                        <Label layoutX="12.0" layoutY="99.0" prefHeight="25.0" prefWidth="25.0" text="Zº" />
                      </children>
                   </AnchorPane>
                </children>

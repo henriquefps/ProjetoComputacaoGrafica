@@ -3,6 +3,7 @@ package projeto;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import controlador.JanelaParteDois;
 import javafx.application.Application;
@@ -155,12 +156,15 @@ public class Main extends Application {
 	public static CameraVirtual camera;
 	public static Iluminacao iluminacao;
 	public static Ponto3D p[];
+	public static ArrayList<Ponto3D> pontosCoordVista;
 	public static Triangulo t[];
 	public static Triangulo triangulosOrdenadosPara_zBuffer[];
 	public static Objetto_zBuffer[][] matrix_zBuffer;
 	public static double xmax = 500, ymax = 500;
 	public static String arquivo = "vaso";
 	public static int atual = 0;
+	public static Ponto3D baricentroObjeto;
+	public static int rotX = 0, rotY = 0, rotZ = 0;
 
 	public static void getPontosArquivo(String arquivoSemExtensao) {
 		try {
@@ -185,6 +189,9 @@ public class Main extends Application {
 				b = Integer.parseInt(qnt[1]);
 				c = Integer.parseInt(qnt[2]);
 				t[i] = new Triangulo(p[a - 1], p[b - 1], p[c - 1]);
+				t[i].indiceX = a-1;
+				t[i].indiceY = b-1;
+				t[i].indiceZ = c-1;
 			}
 			reader.close();
 		} catch (Exception e) {
