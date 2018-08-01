@@ -84,21 +84,32 @@ public class JanelaParteDois implements Initializable {
 	private TextField rzTextField;
 
 	@FXML
+	private TextField somarRXTextField;
+
+	@FXML
+	private TextField somarRYTextField;
+
+	@FXML
+	private TextField somarRZTextField;
+
+	@FXML
 	void mudarPerspectiva() {
-		alerta.setText("");
-		
-		Main.rotX = Integer.parseInt(rxTextField.getText().toString());
-		Main.rotY = Integer.parseInt(ryTextField.getText().toString());
-		Main.rotZ = Integer.parseInt(rzTextField.getText().toString());
-		
-		Main.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
-				Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
+		try {
+			alerta.setText("");
 
-		Main.iluminacao.atualizarParametros(Double.parseDouble(kaTextField.getText()),
-				Double.parseDouble(ksTextField.getText()), Double.parseDouble(etaTextField.getText()), getpl(), getil(),
-				getIamb(), getkd(), getod());
+			Main.rotX = Integer.parseInt(rxTextField.getText().toString());
+			Main.rotY = Integer.parseInt(ryTextField.getText().toString());
+			Main.rotZ = Integer.parseInt(rzTextField.getText().toString());
 
-		BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+			Main.camera.atualizarParametrosDeCamera(getV(), getN(), Double.parseDouble(dValue.getText()),
+					Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
+
+			Main.iluminacao.atualizarParametros(Double.parseDouble(kaTextField.getText()),
+					Double.parseDouble(ksTextField.getText()), Double.parseDouble(etaTextField.getText()), getpl(), getil(),
+					getIamb(), getkd(), getod());
+
+			BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
+		} catch (NumberFormatException e) {System.err.println("NumberFormatException: " + e.getMessage());}
 
 	}
 
@@ -119,9 +130,12 @@ public class JanelaParteDois implements Initializable {
 		this.ksTextField.setText("0.5");
 		this.etaTextField.setText("2");
 		menuButtonArquivo.setText(Main.arquivo);
-		this.rxTextField.setText(Main.rotX+"");
-		this.ryTextField.setText(Main.rotY+"");
-		this.rzTextField.setText(Main.rotZ+"");
+		this.rxTextField.setText(Main.rotX + "");
+		this.ryTextField.setText(Main.rotY + "");
+		this.rzTextField.setText(Main.rotZ + "");
+		this.somarRXTextField.setText("0");
+		this.somarRYTextField.setText("0");
+		this.somarRZTextField.setText("0");
 
 		BibOps.executarTarefaInicial(desenho.getGraphicsContext2D());
 
@@ -276,6 +290,43 @@ public class JanelaParteDois implements Initializable {
 	void setStringTriangulo() {
 		Main.arquivo = "triangulo";
 		menuButtonArquivo.setText(Main.arquivo);
+		mudarPerspectiva();
+	}
+
+	@FXML
+	void maisRX() {
+		rxTextField.setText((Integer.parseInt(rxTextField.getText().toString()) + Integer.parseInt(somarRXTextField.getText().toString()))%360 + "");
+		mudarPerspectiva();
+	}
+
+	@FXML
+	void maisRY() {
+		ryTextField.setText((Integer.parseInt(ryTextField.getText().toString()) + Integer.parseInt(somarRYTextField.getText().toString()))%360 + "");
+		mudarPerspectiva();
+
+	}
+
+	@FXML
+	void maisRZ() {
+		rzTextField.setText((Integer.parseInt(rzTextField.getText().toString()) + Integer.parseInt(somarRZTextField.getText().toString()))%360 + "");
+		mudarPerspectiva();
+	}
+
+	@FXML
+	void menosRX() {
+		rxTextField.setText((Integer.parseInt(rxTextField.getText().toString()) - Integer.parseInt(somarRXTextField.getText().toString()))%360 + "");
+		mudarPerspectiva();
+	}
+
+	@FXML
+	void menosRY() {
+		ryTextField.setText((Integer.parseInt(ryTextField.getText().toString()) - Integer.parseInt(somarRYTextField.getText().toString()))%360 + "");
+		mudarPerspectiva();
+	}
+
+	@FXML
+	void menosRZ() {
+		rzTextField.setText((Integer.parseInt(rzTextField.getText().toString()) - Integer.parseInt(somarRZTextField.getText().toString()))%360 + "");
 		mudarPerspectiva();
 	}
 }

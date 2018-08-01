@@ -798,14 +798,7 @@ public class BibOps {
 			double R[][] = matrixMulti(ry, rx, 4, 4, 4, 4);
 			R = matrixMulti(rz, R, 4, 4, 4, 4);
 			for (int i = 0; i < Main.pontosCoordVista.size(); i++) {
-				
-//				trans1[0][3] = -Math.abs(Main.baricentroObjeto.x -  Main.pontosCoordVista.get(i).x);
-//				trans1[1][3] = -Math.abs(Main.baricentroObjeto.y -  Main.pontosCoordVista.get(i).y);
-//				trans1[2][3] = -Math.abs(Main.baricentroObjeto.z -  Main.pontosCoordVista.get(i).z);
-//				trans2[0][3] = Math.abs(Main.baricentroObjeto.x -  Main.pontosCoordVista.get(i).x);
-//				trans2[1][3] = Math.abs(Main.baricentroObjeto.y -  Main.pontosCoordVista.get(i).y);
-//				trans2[2][3] = Math.abs(Main.baricentroObjeto.z -  Main.pontosCoordVista.get(i).z);
-//				
+					
 				double vet[][] = new double[4][1];
 				vet[0][0] = Main.pontosCoordVista.get(i).x;
 				vet[1][0] = Main.pontosCoordVista.get(i).y;

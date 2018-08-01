@@ -72,11 +72,11 @@
                               <MenuItem mnemonicParsing="false" onAction="#setStringPiramide" text="piramide" />
                           </items>
                         </MenuButton>
-                        <TextField fx:id="rxTextField" layoutX="41.0" layoutY="44.0" prefHeight="27.0" prefWidth="145.0" />
-                        <TextField fx:id="ryTextField" layoutX="41.0" layoutY="71.0" prefHeight="27.0" prefWidth="145.0" />
-                        <TextField fx:id="rzTextField" layoutX="42.0" layoutY="98.0" prefHeight="27.0" prefWidth="144.0" />
+                        <TextField fx:id="rxTextField" layoutX="41.0" layoutY="44.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="50.0" />
+                        <TextField fx:id="ryTextField" layoutX="41.0" layoutY="71.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="50.0" />
+                        <TextField fx:id="rzTextField" layoutX="41.0" layoutY="98.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="51.0" />
                         <Button fx:id="calcular" layoutX="61.0" layoutY="193.0" mnemonicParsing="false" onAction="#mudarPerspectiva" text="Calcular" />
-                        <Label layoutX="31.0" layoutY="14.0" text="Rotações (BETA)">
+                        <Label layoutX="62.0" layoutY="14.0" text="Rotações">
                            <font>
                               <Font name="Helvetica" size="18.0" />
                            </font>
@@ -84,6 +84,15 @@
                         <Label layoutX="12.0" layoutY="45.0" prefHeight="25.0" prefWidth="25.0" text="Xº" />
                         <Label layoutX="12.0" layoutY="72.0" prefHeight="25.0" prefWidth="25.0" text="Yº" />
                         <Label layoutX="12.0" layoutY="99.0" prefHeight="25.0" prefWidth="25.0" text="Zº" />
+                        <Button layoutX="167.0" layoutY="44.0" mnemonicParsing="false" onAction="#maisRX" text="+" />
+                        <Button layoutX="91.0" layoutY="44.0" mnemonicParsing="false" onAction="#menosRX" text="-" />
+                        <Button layoutX="167.0" layoutY="71.0" mnemonicParsing="false" onAction="#maisRY" text="+" />
+                        <Button layoutX="91.0" layoutY="71.0" mnemonicParsing="false" onAction="#menosRY" text="-" />
+                        <Button layoutX="167.0" layoutY="98.0" mnemonicParsing="false" onAction="#maisRZ" text="+" />
+                        <Button layoutX="91.0" layoutY="98.0" mnemonicParsing="false" onAction="#menosRZ" text="-" />
+                        <TextField fx:id="somarRXTextField" layoutX="115.0" layoutY="44.0" prefHeight="27.0" prefWidth="53.0" />
+                        <TextField fx:id="somarRYTextField" layoutX="115.0" layoutY="71.0" prefHeight="27.0" prefWidth="53.0" />
+                        <TextField fx:id="somarRZTextField" layoutX="115.0" layoutY="98.0" prefHeight="27.0" prefWidth="53.0" />
                      </children>
                   </AnchorPane>
                </children>
@@ -106,21 +115,21 @@
                   <Font name="Helvetica" size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="kaTextField" layoutX="159.0" layoutY="8.0" prefHeight="27.0" prefWidth="55.0" />
+            <TextField fx:id="kaTextField" layoutX="159.0" layoutY="8.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="55.0" />
             <Label layoutX="126.0" layoutY="13.0" prefWidth="25.0" text="Ka" />
-            <TextField fx:id="iambTextField" layoutX="259.0" layoutY="8.0" prefHeight="27.0" prefWidth="133.0" />
+            <TextField fx:id="iambTextField" layoutX="259.0" layoutY="8.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="133.0" />
             <Label layoutX="225.0" layoutY="13.0" prefHeight="17.0" prefWidth="33.0" text="Iamb" />
-            <TextField fx:id="kdTextField" layoutX="159.0" layoutY="42.0" prefHeight="27.0" prefWidth="133.0" />
+            <TextField fx:id="kdTextField" layoutX="159.0" layoutY="42.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="133.0" />
             <Label layoutX="126.0" layoutY="47.0" prefWidth="25.0" text="Kd" />
-            <TextField fx:id="odTextField" layoutX="324.0" layoutY="42.0" prefHeight="27.0" prefWidth="133.0" />
+            <TextField fx:id="odTextField" layoutX="324.0" layoutY="42.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="133.0" />
             <Label layoutX="302.0" layoutY="47.0" prefHeight="17.0" prefWidth="23.0" text="Od" />
-            <TextField fx:id="etaTextField" layoutX="259.0" layoutY="77.0" prefHeight="27.0" prefWidth="55.0" />
+            <TextField fx:id="etaTextField" layoutX="259.0" layoutY="77.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="55.0" />
             <Label layoutX="234.0" layoutY="82.0" prefWidth="25.0" text="Eta" />
-            <TextField fx:id="ksTextField" layoutX="159.0" layoutY="77.0" prefHeight="27.0" prefWidth="54.0" />
+            <TextField fx:id="ksTextField" layoutX="159.0" layoutY="77.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="54.0" />
             <Label layoutX="126.0" layoutY="82.0" prefWidth="25.0" text="Ks" />
-            <TextField fx:id="ilTextField" layoutX="351.0" layoutY="77.0" prefHeight="27.0" prefWidth="133.0" />
+            <TextField fx:id="ilTextField" layoutX="351.0" layoutY="77.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="133.0" />
             <Label layoutX="336.0" layoutY="82.0" prefHeight="17.0" prefWidth="10.0" text="Il" />
-            <TextField fx:id="plTextField" layoutX="490.0" layoutY="42.0" prefHeight="27.0" prefWidth="133.0" />
+            <TextField fx:id="plTextField" layoutX="490.0" layoutY="42.0" onAction="#mudarPerspectiva" prefHeight="27.0" prefWidth="133.0" />
             <Label layoutX="475.0" layoutY="47.0" prefHeight="17.0" prefWidth="10.0" text="Pl" />
          </children>
       </AnchorPane>
