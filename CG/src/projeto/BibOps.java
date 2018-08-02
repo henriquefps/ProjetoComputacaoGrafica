@@ -14,6 +14,7 @@ public class BibOps {
 	 * Funcao chamada pelo no inicio da execucao do programa por
 	 * JanelaParteDois.Initialize()
 	 */
+	@Deprecated
 	public static void executarTarefaInicial(GraphicsContext desenho) {
 		Main.getPontosArquivo(Main.arquivo);
 		BibOps.iniciarMatriz_zBuffer();
@@ -32,8 +33,7 @@ public class BibOps {
 	/*
 	 * Funcao chamada sempre que o botao calcular e ativado
 	 */
-	public static void executarTarefaBotao(GraphicsContext desenho) {
-		desenho.fillRect(0, 0, Main.xmax, Main.ymax);
+	public static synchronized void renderizarObjeto(GraphicsContext desenho) {
 		Main.getPontosArquivo(Main.arquivo);
 		BibOps.iniciarMatriz_zBuffer();
 		BibOps.setReferenciasOriginaisDosTriangulos();
@@ -52,6 +52,7 @@ public class BibOps {
 	 */
 
 	private static void pintar_zBuffer(GraphicsContext desenho) {
+		desenho.fillRect(0, 0, Main.xmax, Main.ymax);
 		for (int i = 0; i < Main.xmax; i++) {
 			for (int j = 0; j < Main.ymax; j++) {
 				desenho.setFill(Main.matrix_zBuffer[i][j].corDoPixel);
@@ -265,6 +266,8 @@ public class BibOps {
 		return new Ponto3D(v[0][0], v[1][0], v[2][0]);
 	}
 
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static void atualizaTrianguloParaCoordVista(Triangulo t, CameraVirtual camera) {
 		t.vistaA = BibOps.coordenadasDeVista(camera, t.vistaA);
 		t.vistaB = BibOps.coordenadasDeVista(camera, t.vistaB);
@@ -549,9 +552,9 @@ public class BibOps {
 			Main.triangulosOrdenadosPara_zBuffer[i].telaC = new Ponto2D(pontoC[0], pontoC[1], "c");
 
 			gc.setFill(Color.WHITE); // Cor do Ponto
-			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
-			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
-			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
+//			gc.fillRect(pontoA[0], pontoA[1], 1, 1); // Tamanho do Ponto
+//			gc.fillRect(pontoB[0], pontoB[1], 1, 1); // Tamanho do Ponto
+//			gc.fillRect(pontoC[0], pontoC[1], 1, 1); // Tamanho do Ponto
 			scanLine(gc, Main.triangulosOrdenadosPara_zBuffer[i]);
 
 		}

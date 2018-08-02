@@ -2,6 +2,7 @@ package controlador;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Semaphore;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -92,6 +93,8 @@ public class JanelaParteDois implements Initializable {
 	@FXML
 	private TextField somarRZTextField;
 
+	Semaphore a = new Semaphore(1);
+
 	@FXML
 	void mudarPerspectiva() {
 		try {
@@ -105,11 +108,14 @@ public class JanelaParteDois implements Initializable {
 					Double.parseDouble(hxValue.getText()), Double.parseDouble(hyValue.getText()), getC());
 
 			Main.iluminacao.atualizarParametros(Double.parseDouble(kaTextField.getText()),
-					Double.parseDouble(ksTextField.getText()), Double.parseDouble(etaTextField.getText()), getpl(), getil(),
-					getIamb(), getkd(), getod());
+					Double.parseDouble(ksTextField.getText()), Double.parseDouble(etaTextField.getText()), getpl(),
+					getil(), getIamb(), getkd(), getod());
 
-			BibOps.executarTarefaBotao(desenho.getGraphicsContext2D());
-		} catch (NumberFormatException e) {System.err.println("NumberFormatException: " + e.getMessage());}
+			BibOps.renderizarObjeto(desenho.getGraphicsContext2D());
+
+		} catch (NumberFormatException e) {
+			System.err.println("NumberFormatException: " + e.getMessage());
+		}
 
 	}
 
@@ -137,7 +143,7 @@ public class JanelaParteDois implements Initializable {
 		this.somarRYTextField.setText("0");
 		this.somarRZTextField.setText("0");
 
-		BibOps.executarTarefaInicial(desenho.getGraphicsContext2D());
+		BibOps.renderizarObjeto(desenho.getGraphicsContext2D());
 
 	}
 
@@ -292,41 +298,61 @@ public class JanelaParteDois implements Initializable {
 		menuButtonArquivo.setText(Main.arquivo);
 		mudarPerspectiva();
 	}
+	
+	@FXML
+	void setStringCubo() {
+		Main.arquivo = "cubo";
+		menuButtonArquivo.setText(Main.arquivo);
+		mudarPerspectiva();
+	}
+	
+	@FXML
+	void setStringVaca() {
+		Main.arquivo = "vaca";
+		menuButtonArquivo.setText(Main.arquivo);
+		mudarPerspectiva();
+	}
 
 	@FXML
 	void maisRX() {
-		rxTextField.setText((Integer.parseInt(rxTextField.getText().toString()) + Integer.parseInt(somarRXTextField.getText().toString()))%360 + "");
+		rxTextField.setText((Integer.parseInt(rxTextField.getText().toString())
+				+ Integer.parseInt(somarRXTextField.getText().toString())) % 360 + "");
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void maisRY() {
-		ryTextField.setText((Integer.parseInt(ryTextField.getText().toString()) + Integer.parseInt(somarRYTextField.getText().toString()))%360 + "");
+		ryTextField.setText((Integer.parseInt(ryTextField.getText().toString())
+				+ Integer.parseInt(somarRYTextField.getText().toString())) % 360 + "");
 		mudarPerspectiva();
 
 	}
 
 	@FXML
 	void maisRZ() {
-		rzTextField.setText((Integer.parseInt(rzTextField.getText().toString()) + Integer.parseInt(somarRZTextField.getText().toString()))%360 + "");
+		rzTextField.setText((Integer.parseInt(rzTextField.getText().toString())
+				+ Integer.parseInt(somarRZTextField.getText().toString())) % 360 + "");
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void menosRX() {
-		rxTextField.setText((Integer.parseInt(rxTextField.getText().toString()) - Integer.parseInt(somarRXTextField.getText().toString()))%360 + "");
+		rxTextField.setText((Integer.parseInt(rxTextField.getText().toString())
+				- Integer.parseInt(somarRXTextField.getText().toString())) % 360 + "");
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void menosRY() {
-		ryTextField.setText((Integer.parseInt(ryTextField.getText().toString()) - Integer.parseInt(somarRYTextField.getText().toString()))%360 + "");
+		ryTextField.setText((Integer.parseInt(ryTextField.getText().toString())
+				- Integer.parseInt(somarRYTextField.getText().toString())) % 360 + "");
 		mudarPerspectiva();
 	}
 
 	@FXML
 	void menosRZ() {
-		rzTextField.setText((Integer.parseInt(rzTextField.getText().toString()) - Integer.parseInt(somarRZTextField.getText().toString()))%360 + "");
+		rzTextField.setText((Integer.parseInt(rzTextField.getText().toString())
+				- Integer.parseInt(somarRZTextField.getText().toString())) % 360 + "");
 		mudarPerspectiva();
 	}
 }
